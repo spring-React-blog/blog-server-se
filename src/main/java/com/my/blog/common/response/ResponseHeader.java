@@ -1,10 +1,12 @@
 package com.my.blog.common.response;
 
-import lombok.Data;
+import com.my.blog.common.errorcode.ErrorCode;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor (access = AccessLevel.PROTECTED)
 public class ResponseHeader {
     private String code;
     private String status;
@@ -18,6 +20,21 @@ public class ResponseHeader {
 
     public static ResponseHeaderBuilder builder(){
         return new ResponseHeaderBuilder();
+    }
+
+    public static ResponseHeader ok(){
+        return new ResponseHeaderBuilder()
+                .code("200")
+                .status("정상")
+                .message("success")
+                .build();
+    }
+    public static ResponseHeader error(ErrorCode errorCode){
+        return new ResponseHeaderBuilder()
+                .code(errorCode.getCode())
+                .status(errorCode.getStatus())
+                .message(errorCode.getMessage())
+                .build();
     }
 
     @Getter

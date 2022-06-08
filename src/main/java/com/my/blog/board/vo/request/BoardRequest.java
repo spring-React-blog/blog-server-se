@@ -1,29 +1,36 @@
 package com.my.blog.board.vo.request;
 
 import com.my.blog.board.domain.Board;
-import lombok.Data;
-import lombok.ToString;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import com.my.blog.board.domain.Status;
+import com.my.blog.board.vo.Content;
+import com.my.blog.board.vo.Title;
+import com.my.blog.category.entity.Category;
+import lombok.*;
+import org.springframework.lang.Nullable;
 
 @Data
 @ToString
 public class BoardRequest {
 
-    @NotBlank
-    @Size(max=30,message = "30자 이하로 입력해주세요.")
-    String title;
+    private Title title;
 
-    @NotEmpty
-    String cten;
+    private Content content;
+
+    private Status status;
+
+    private Long memberId;
+
+    @Nullable
+    private Long categoryId;
+
 
     public Board toEntity(){
+        if(this.status == null) this.status = Status.TRUE;
+
         return Board.builder()
                 .title(this.title)
-                .content(this.cten)
+                .content(this.content)
+                .status(this.status)
                 .build();
     }
 
