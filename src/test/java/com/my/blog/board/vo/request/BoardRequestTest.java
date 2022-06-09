@@ -22,12 +22,12 @@ class BoardRequestTest {
 
     @BeforeEach
     public void createBoardRequest(){
-        req.setTitle(new Title("타이틀.."));
-        req.setContent(new Content("내용.."));
+        req.setTitle(Title.of("타이틀.."));
+        req.setContent(Content.of("내용.."));
     }
     @Test
     public void isTitleUnderMaxSize(){
-        req.setTitle(new Title("타이틀이 삼십자를 넘으면 에러가 나야한다."));
+        req.setTitle(Title.of("타이틀이 삼십자를 넘으면 에러가 나야한다."));
 
 
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
@@ -42,7 +42,7 @@ class BoardRequestTest {
 
     @Test
     public void isTitleOverMaxSize(){
-        req.setTitle(new Title("타이틀이 삼십자를 넘으면 메세지가 나온다. gfgfg지금 이 글자는 삼십자 이상이다.."));
+        req.setTitle(Title.of("타이틀이 삼십자를 넘으면 메세지가 나온다. gfgfg지금 이 글자는 삼십자 이상이다.."));
 
         System.out.println("title > "+req.getTitle().getTitle());
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();

@@ -57,8 +57,8 @@ class BoardAPIControllerTest {
     public void validTest() throws Exception {
         BoardRequest req = new BoardRequest();
 
-        req.setTitle(new Title("타이틀이 삼십자 이하인 글"));
-        req.setContent(new Content("내용.."));
+        req.setTitle(Title.of("타이틀이 삼십자 이하인 글"));
+        req.setContent(Content.of("내용.."));
         req.setStatus(Status.TRUE);
         req.setCategoryId(1L);
 
@@ -91,8 +91,8 @@ class BoardAPIControllerTest {
     @DisplayName("보드컨트롤러 create호출_title 글자 수 초과")
     public void validTestWithException() throws Exception {
         BoardRequest req = new BoardRequest();
-        req.setTitle(new Title("타이틀이 삼십자를 넘으면 메세지가 나온다. 지금 이 글자는 삼십자 이상이다."));
-        req.setContent(new Content("내용.."));
+        req.setTitle(Title.of("타이틀이 삼십자를 넘으면 메세지가 나온다. 지금 이 글자는 삼십자 이상이다."));
+        req.setContent(Content.of("내용.."));
         req.setCategoryId(0L);
 
         String body = objectMapper.writeValueAsString(req);

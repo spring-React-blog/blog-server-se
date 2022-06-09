@@ -1,5 +1,5 @@
 package com.my.blog.config;
-
+/*
 import com.my.blog.jwt.TokenProvider;
 import com.my.blog.jwt.handler.JwtAccessDeniedHandler;
 import com.my.blog.jwt.handler.JwtAuthenticateFilter;
@@ -23,9 +23,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-@Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
+//@Configuration
+//@EnableWebSecurity
+//@RequiredArgsConstructor
 public class SecurityConfig  {
     private static final String PUBLIC = "/api/v1/public/**";
     private static final String DB = "/console/**";
@@ -84,3 +84,4 @@ public class SecurityConfig  {
     }
 
 }
+*/

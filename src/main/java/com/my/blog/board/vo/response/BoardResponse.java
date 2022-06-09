@@ -3,6 +3,9 @@ package com.my.blog.board.vo.response;
 import com.my.blog.board.domain.Board;
 import com.my.blog.board.vo.Content;
 import com.my.blog.board.vo.Title;
+import com.my.blog.count.entity.BoardCount;
+import com.my.blog.member.entity.Member;
+import com.my.blog.member.vo.Email;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
@@ -11,16 +14,23 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor (access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@ToString
 public class BoardResponse {
     private Long id;
     private Title title;
     private Content content;
     private String categoryName;
     private Long memberId;
+    private String email;
+   // private Member member;
+  //  private BoardCount boardCount;
     private LocalDateTime rgstDate;
     private Long viewCount;
 
+    public String title(){
+        return this.title.getTitle();
+    }
     public static BoardResponse toResponse(Board board){
         return BoardResponse.builder()
                 .id(board.getId())

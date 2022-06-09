@@ -46,6 +46,15 @@ public class Board {
     @JoinColumn(name="member_id")
     private Member member;
 
+    public String title() {
+        return this.title.getTitle();
+    }
+  /*  public String content(){
+        return this.content.
+    }*/
+    public String categoryName(){
+        return this.category.getName();
+    }
 
     public void initBoardCount(BoardCount boardCount){
         this.boardCount = boardCount;
