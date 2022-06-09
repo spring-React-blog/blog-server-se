@@ -1,14 +1,16 @@
 package com.my.blog.count.entity;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="BoardCount")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Table(name="boardCount")
 public class BoardCount {
 
     @Id @GeneratedValue

@@ -50,7 +50,7 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                // .fetchJoin()
                 .leftJoin(board.boardCount, boardCount)
                // .fetchJoin()
-             //   .leftJoin(board.member, member)
+                .leftJoin(board.member, member) //이거 없으면 cross 조인?!
                //.fetchJoin()
                 .where(boardIdEq(condition.getBoardId()),
                         titleContains(condition.title()),

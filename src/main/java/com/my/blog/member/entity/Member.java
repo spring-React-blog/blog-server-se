@@ -5,10 +5,7 @@ import com.my.blog.member.vo.Password;
 import com.my.blog.member.vo.RoleType;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
@@ -18,7 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor(access=AccessLevel.PROTECTED)
 public class Member {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")
     private Long Id;
 

@@ -22,7 +22,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class BoardService {
     private final BoardRepository boardRepository;
- //   private final BoardSearchRepository boardSearchRepository;
 
     @Transactional
     public Long save(Board board){

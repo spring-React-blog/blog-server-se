@@ -90,14 +90,14 @@ class BoardServiceTest {
         Board board = req.toEntity();
         Member member = memberService.findById(req.getMemberId());
         Category category = categoryService.findById(req.getCategoryId());
-        BoardCount count = new BoardCount();
+        BoardCount count = BoardCount.builder().viewCount(Long.valueOf(0)).build();
 
         board.setMember(member);
         board.setCategory(category);
         board.initBoardCount(count);
 
         Long savedBoardId = boardService.save(board);
-        assertThat(savedBoardId).isEqualTo(2);
+        assertThat(savedBoardId).isEqualTo(1);
         em.clear();
     }
 
@@ -105,9 +105,10 @@ class BoardServiceTest {
     @Order(2)
     @DisplayName("상세 보드")
     public void getBoard(){
-        BoardResponse board = boardService.getBoard(Long.valueOf(99));
+        BoardResponse board = boardService.getBoard(Long.valueOf(1));
         System.out.println("getobar > " +  board.title());
     }
+
     @Test
     @Order(3)
     @DisplayName("전체 보드 리스트")
@@ -120,12 +121,13 @@ class BoardServiceTest {
        // condition.setCategory(category);
       //  condition.setTitle(Title.of("타이틀"));
 
-        PageRequest pageable = PageRequest.of(0, 10);
+        PageRequest pageable = PageRequest.of(1, 10);
         Page<BoardResponse> boards = boardService.getBoards(condition, pageable);
 
         int size = boards.getSize();
         List<BoardResponse> content = boards.getContent();
         System.out.println("size==" + size + " , " + content.size());
+
         for (BoardResponse res: content
              ) {
             System.out.println(res.toString());

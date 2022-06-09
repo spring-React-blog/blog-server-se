@@ -1,5 +1,5 @@
 package com.my.blog.config;
-/*
+
 import com.my.blog.jwt.TokenProvider;
 import com.my.blog.jwt.handler.JwtAccessDeniedHandler;
 import com.my.blog.jwt.handler.JwtAuthenticateFilter;
@@ -15,17 +15,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-//@Configuration
-//@EnableWebSecurity
-//@RequiredArgsConstructor
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig  {
     private static final String PUBLIC = "/api/v1/public/**";
     private static final String DB = "/console/**";
@@ -84,4 +82,3 @@ public class SecurityConfig  {
     }
 
 }
-*/
