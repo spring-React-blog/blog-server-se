@@ -90,11 +90,11 @@ class BoardServiceTest {
         Board board = req.toEntity();
         Member member = memberService.findById(req.getMemberId());
         Category category = categoryService.findById(req.getCategoryId());
-        BoardCount count = BoardCount.builder().viewCount(Long.valueOf(0)).build();
+       // BoardCount count = BoardCount.builder().viewCount(Long.valueOf(0)).build();
 
         board.setMember(member);
         board.setCategory(category);
-        board.initBoardCount(count);
+     //   board.initBoardCount(count);
 
         Long savedBoardId = boardService.save(board);
         assertThat(savedBoardId).isEqualTo(1);
@@ -121,7 +121,7 @@ class BoardServiceTest {
        // condition.setCategory(category);
       //  condition.setTitle(Title.of("타이틀"));
 
-        PageRequest pageable = PageRequest.of(1, 10);
+        PageRequest pageable = PageRequest.of(0, 10);
         Page<BoardResponse> boards = boardService.getBoards(condition, pageable);
 
         int size = boards.getSize();

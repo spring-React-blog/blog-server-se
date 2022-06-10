@@ -6,9 +6,10 @@ import com.my.blog.common.response.ResponseHeader;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class ExceptionControllerAdvice  {
+public class ExceptionControllerAdvice  extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CommonException.class)
     protected ResponseEnvelope<ErrorResponse> handleCommonException(CommonException e){

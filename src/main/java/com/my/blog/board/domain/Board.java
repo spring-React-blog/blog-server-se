@@ -4,6 +4,7 @@ import com.my.blog.board.vo.Content;
 import com.my.blog.board.vo.Title;
 import com.my.blog.board.vo.response.BoardResponse;
 import com.my.blog.category.entity.Category;
+import com.my.blog.common.entity.BaseTimeEntity;
 import com.my.blog.count.entity.BoardCount;
 import com.my.blog.member.entity.Member;
 import lombok.*;
@@ -17,9 +18,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name="board")
-public class Board {
+public class Board extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="board_id")
     private Long id;
 
     @Column(name="title")
@@ -50,9 +52,7 @@ public class Board {
     public String title() {
         return this.title.getTitle();
     }
-  /*  public String content(){
-        return this.content.
-    }*/
+   public String content(){return this.content.getContent();}
     public String categoryName(){
         return this.category.getName();
     }
@@ -69,15 +69,9 @@ public class Board {
         this.category = category;
     }
 
-    public BoardResponse toResponse(){
-       return BoardResponse.builder()
-                .id(this.getId())
-                .title(this.getTitle())
-                .content(this.getContent())
-                .categoryName(this.category.getName())
-                .memberId(this.member.getId())
-                .rgstDate(this.getRgstDateTime())
-                .viewCount(this.boardCount.getViewCount())
-                .build();
+    public void update(Board updateBoard) {
+        this.title = updateBoard.getTitle();
+        this.content = updateBoard.getContent();
     }
+
 }
