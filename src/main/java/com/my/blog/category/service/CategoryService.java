@@ -13,7 +13,6 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public Long save(Category category){
-        System.out.println("service id > "+category.getId());
         Category savedCategory = categoryRepository.save(category);
         return savedCategory.getId();
     }

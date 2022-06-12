@@ -11,28 +11,40 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@Table(name="boardcount")
+@Table(name="boardCount")
 public class BoardCount {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "count_id")
     private Long id;
 
-    @Column(columnDefinition = "integer default 0")
+    @Column
     private Long viewCount;
 
-    @Column(columnDefinition = "integer default 0")
+    @Column
     private int likeCount;
 
-    @Column(columnDefinition = "integer default 0")
+    @Column
     private int replyCount;
 
-    @OneToOne
-    @JoinColumn(name="board_id")
+    @OneToOne(mappedBy = "boardCount")
     private Board board;
 
-    public Long increateViewCount() {
-        this.viewCount = this.viewCount + 1;
-        return this.viewCount;
+    @Builder
+    public BoardCount(Long viewCount
+                    ,int likeCount
+                    ,int replyCount
+                    ,Board board){
+        this.viewCount = viewCount;
+        this.likeCount = likeCount;
+        this.replyCount = replyCount;
+        this.board = board;
+    }
+
+
+
+    public BoardCount updateViewCount(long count) {
+        this.viewCount = count;
+        return this;
     }
 }

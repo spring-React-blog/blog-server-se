@@ -1,8 +1,5 @@
 package com.my.blog.board.domain;
 
-import com.my.blog.board.vo.Content;
-import com.my.blog.board.vo.Title;
-import com.my.blog.board.vo.response.BoardResponse;
 import com.my.blog.category.entity.Category;
 import com.my.blog.common.entity.BaseTimeEntity;
 import com.my.blog.count.entity.BoardCount;
@@ -10,7 +7,6 @@ import com.my.blog.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,9 +25,6 @@ public class Board extends BaseTimeEntity {
 
     @Column(name="content")
     private Content content;
-
-    @Column(name="rgstDateTime")
-    private LocalDateTime rgstDateTime;
 
     @Column(name="open_status")
     @Enumerated(EnumType.STRING)
@@ -57,7 +50,16 @@ public class Board extends BaseTimeEntity {
         return this.category.getName();
     }
 
-    public void initBoardCount(BoardCount boardCount){
+    public void initBoardCount(){
+        this.boardCount = BoardCount.builder()
+                        .viewCount(0L)
+                        .likeCount(0)
+                        .replyCount(0)
+                        .board(this)
+                        .build();
+    }
+
+    public void updateBoardCount(BoardCount boardCount){
         this.boardCount = boardCount;
     }
 

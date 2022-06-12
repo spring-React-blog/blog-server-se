@@ -8,6 +8,7 @@ import com.my.blog.board.vo.response.BoardResponse;
 import com.my.blog.common.errorcode.BoardErrorCode;
 import com.my.blog.common.errorcode.MemberErrorCode;
 import com.my.blog.common.exception.CommonException;
+import com.my.blog.count.entity.BoardCount;
 import com.my.blog.count.service.BoardCountService;
 import com.my.blog.member.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardCountService boardCountService;
@@ -32,9 +33,10 @@ public class BoardService {
         return savedBoard.getId();
     }
 
+    @Transactional
     public BoardResponse getBoard(Long id){
         Board board = boardRepository.findById(id).orElseThrow(() -> new CommonException(BoardErrorCode.BOARD_NOT_FOUND));
-        Long increasedViewCount = boardCountService.increaseViewCount(board.getBoardCount());
+        boardCountService.increaseViewCount(board.getBoardCount().getId());
         return BoardResponse.toResponse(board);
     }
     

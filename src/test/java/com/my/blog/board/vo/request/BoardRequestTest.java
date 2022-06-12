@@ -1,9 +1,7 @@
 package com.my.blog.board.vo.request;
 
-import com.my.blog.board.domain.Board;
-import com.my.blog.board.vo.Content;
-import com.my.blog.board.vo.Title;
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
+import com.my.blog.board.domain.Content;
+import com.my.blog.board.domain.Title;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

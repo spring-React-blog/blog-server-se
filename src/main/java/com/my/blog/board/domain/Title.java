@@ -1,4 +1,4 @@
-package com.my.blog.board.vo;
+package com.my.blog.board.domain;
 
 import lombok.*;
 

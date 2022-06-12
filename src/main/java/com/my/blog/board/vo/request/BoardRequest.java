@@ -2,9 +2,8 @@ package com.my.blog.board.vo.request;
 
 import com.my.blog.board.domain.Board;
 import com.my.blog.board.domain.Status;
-import com.my.blog.board.vo.Content;
-import com.my.blog.board.vo.Title;
-import com.my.blog.category.entity.Category;
+import com.my.blog.board.domain.Content;
+import com.my.blog.board.domain.Title;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -26,12 +25,13 @@ public class BoardRequest {
 
     public Board toEntity(){
         if(this.status == null) this.status = Status.TRUE;
-
-        return Board.builder()
+        Board board = Board.builder()
                 .title(this.title)
                 .content(this.content)
                 .status(this.status)
                 .build();
+        board.initBoardCount();
+        return board;
     }
 
 }
