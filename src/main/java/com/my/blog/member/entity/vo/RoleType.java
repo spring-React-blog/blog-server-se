@@ -1,4 +1,4 @@
-package com.my.blog.member.vo;
+package com.my.blog.member.entity.vo;
 
 public enum RoleType {
     USER,ADMIN;

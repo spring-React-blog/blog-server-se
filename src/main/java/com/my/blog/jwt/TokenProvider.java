@@ -7,7 +7,7 @@ import com.my.blog.jwt.dto.RefreshToken;
 import com.my.blog.jwt.dto.TokenDTO;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.repository.MemberRepository;
-import com.my.blog.member.vo.Email;
+import com.my.blog.member.entity.vo.Email;
 import com.my.blog.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -65,7 +65,7 @@ public class TokenProvider implements InitializingBean {
                 .collect(joining(","));
 
         long time = new Date().getTime();
-        Member member = memberRepository.findByEmail(new Email(email)).orElseThrow(()->new CommonException(MemberErrorCode.USER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(Email.from(email)).orElseThrow(()->new CommonException(MemberErrorCode.USER_NOT_FOUND));
         String actoken = createToken(member.getId(), authorities, new Date(time+accessTokenValidityInMilliseconds));
         String retoken = createToken(member.getId(), authorities, new Date(time+refreshTokenValidityInMilliseconds));
 

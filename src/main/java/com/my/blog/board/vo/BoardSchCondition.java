@@ -3,7 +3,7 @@ package com.my.blog.board.vo;
 import com.my.blog.board.domain.Content;
 import com.my.blog.board.domain.Title;
 import com.my.blog.category.entity.Category;
-import com.my.blog.member.vo.Email;
+import com.my.blog.member.entity.vo.Email;
 import lombok.Data;
 
 import java.util.Objects;

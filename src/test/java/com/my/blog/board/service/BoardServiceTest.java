@@ -14,9 +14,11 @@ import com.my.blog.category.vo.CategoryRequest;
 import com.my.blog.count.service.BoardCountService;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.service.MemberService;
-import com.my.blog.member.vo.Email;
-import com.my.blog.member.vo.MemberRequest;
-import com.my.blog.member.vo.Password;
+import com.my.blog.member.entity.vo.Email;
+import com.my.blog.member.dto.ModelMapper;
+import com.my.blog.member.dto.MemberResponse;
+import com.my.blog.member.dto.request.CreateRequest;
+import com.my.blog.member.entity.vo.Password;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,13 +59,13 @@ class BoardServiceTest {
 
     @BeforeEach
     public void createMember(){
-        MemberRequest request = MemberRequest.builder()
-                .email(new Email("test@google.com"))
-                .password(new Password("nono"))
+        CreateRequest request = CreateRequest.builder()
+                .email(Email.from("test@google.com"))
+                .password(Password.from("nono"))
                 .name("이승은")
                 .build();
 
-        this.memberId = memberService.save(request.toEntity());
+        this.memberId = memberService.save(ModelMapper.createMember(request));
 
     }
 
@@ -88,9 +90,15 @@ class BoardServiceTest {
         req.setMemberId(memberId);
 
         Board board = req.toEntity();
-        Member member = memberService.findById(req.getMemberId());
+        MemberResponse mem = memberService.findById(req.getMemberId());
+
         Category category = categoryService.findById(req.getCategoryId());
 
+        Member member = Member.builder()
+                .nickName(mem.getNickName())
+                .name(mem.getName())
+                .email(mem.getEmail())
+                .build();
         board.setMember(member);
         board.setCategory(category);
 

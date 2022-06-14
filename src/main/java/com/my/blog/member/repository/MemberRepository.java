@@ -1,7 +1,7 @@
 package com.my.blog.member.repository;
 
 import com.my.blog.member.entity.Member;
-import com.my.blog.member.vo.Email;
+import com.my.blog.member.entity.vo.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
