@@ -1,7 +1,7 @@
-package com.my.blog.board.vo;
+package com.my.blog.board.dto;
 
-import com.my.blog.board.domain.Content;
-import com.my.blog.board.domain.Title;
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Title;
 import com.my.blog.category.entity.Category;
 import com.my.blog.member.entity.vo.Email;
 import lombok.Data;

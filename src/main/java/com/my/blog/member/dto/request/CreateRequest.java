@@ -1,5 +1,6 @@
 package com.my.blog.member.dto.request;
 
+import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.vo.NickName;
 import com.my.blog.member.entity.vo.Password;
@@ -15,7 +16,7 @@ public class CreateRequest {
 
     private Email email;
     private Password password;
-    private String name;
+    private Name name;
     private NickName nickName;
 
     private RoleType roleType;
@@ -24,7 +25,7 @@ public class CreateRequest {
     public CreateRequest(
             Email email,
             Password password,
-            String name,
+            Name name,
             NickName nickName,
             RoleType roleType
     ){

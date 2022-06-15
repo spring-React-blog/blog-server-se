@@ -1,7 +1,7 @@
 package com.my.blog.jwt.handler;
 
 import com.my.blog.common.errorcode.ErrorCode;
-import com.my.blog.common.errorcode.JWTErrorCode;
+import com.my.blog.jwt.error.JWTErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

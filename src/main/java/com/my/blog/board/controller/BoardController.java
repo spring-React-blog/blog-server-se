@@ -2,9 +2,9 @@ package com.my.blog.board.controller;
 
 import com.my.blog.board.domain.Board;
 import com.my.blog.board.service.BoardService;
-import com.my.blog.board.vo.BoardSchCondition;
-import com.my.blog.board.vo.request.BoardRequest;
-import com.my.blog.board.vo.response.BoardResponse;
+import com.my.blog.board.dto.BoardSchCondition;
+import com.my.blog.board.dto.request.BoardRequest;
+import com.my.blog.board.dto.response.BoardResponse;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.common.response.ResponseEnvelope;

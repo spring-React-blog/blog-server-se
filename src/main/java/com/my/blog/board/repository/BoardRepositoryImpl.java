@@ -1,8 +1,8 @@
 package com.my.blog.board.repository;
 
 import com.my.blog.board.domain.Board;
-import com.my.blog.board.vo.BoardSchCondition;
-import com.my.blog.board.vo.response.BoardResponse;
+import com.my.blog.board.dto.BoardSchCondition;
+import com.my.blog.board.dto.response.BoardResponse;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -36,16 +36,16 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
         return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
     }
     @Override
-    public Page<BoardResponse> search(BoardSchCondition condition, Pageable pageable) {
+    public Page<BoardResponse> search(final BoardSchCondition condition, final Pageable pageable) {
         List<BoardResponse> responses = queryFactory
                 .select(Projections.constructor(
                         BoardResponse.class,
                         board.id,
                         board.title,
                         board.content,
-                        board.category,
-                        board.member,
-                        board.boardCount
+                        board.category.name,
+                        board.member.email,
+                        board.boardCount.viewCount
                 ))
                 .from(board)
                 .leftJoin(board.category, category)
@@ -54,8 +54,7 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                 .where(boardIdEq(condition.getBoardId()),
                         titleContains(condition.title()),
                         contentContains(condition.content()),
-                        emailContains(condition.memberEmail()),
-                        categoryIs(condition.categoryName())
+                        emailContains(condition.memberEmail())
                 )
                 .orderBy(orderCondition(pageable))
                 .offset(pageable.getOffset())
@@ -71,40 +70,38 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                         boardIdEq(condition.getBoardId()),
                         titleContains(condition.title()),
                         contentContains(condition.content()),
-                        emailContains(condition.memberEmail()),
-                        categoryIs(condition.categoryName())
+                        emailContains(condition.memberEmail())
                 );
 
         return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
     }
 
-    public List<BoardResponse> getBoardList(BoardSchCondition condition, Pageable pageable){
+    public List<BoardResponse> getBoardList(final BoardSchCondition condition,final Pageable pageable){
        return queryFactory
                .select(Projections.constructor(
                        BoardResponse.class,
                        board.id,
                        board.title,
                        board.content,
-                       board.category,
-                       board.member,
-                       board.boardCount
+                       board.category.name,
+                       board.member.email,
+                       board.boardCount.viewCount
                ))
                 .from(board)
                 .leftJoin(board.category, category)
                 .leftJoin(board.boardCount, boardCount)
                 .leftJoin(board.member, member)
-                .where(boardIdEq(condition.getBoardId()),
-                        titleContains(condition.title()),
-                        contentContains(condition.content()),
-                        emailContains(condition.memberEmail()),
-                        categoryIs(condition.categoryName())
-                )
+//                .where(boardIdEq(condition.getBoardId()),
+//                        titleContains(condition.title()),
+//                        contentContains(condition.content()),
+//                        emailContains(condition.memberEmail()),
+//                )
                 .orderBy(orderCondition(pageable))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
-    public JPAQuery<Long> countQuery(BoardSchCondition condition){
+    public JPAQuery<Long> countQuery(final BoardSchCondition condition){
         return queryFactory
                 .select(board.count())
                 .from(board)
@@ -114,12 +111,11 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                         boardIdEq(condition.getBoardId()),
                         titleContains(condition.title()),
                         contentContains(condition.content()),
-                        emailContains(condition.memberEmail()),
-                        categoryIs(condition.categoryName())
+                        emailContains(condition.memberEmail())
                 );
     }
 
-    private OrderSpecifier orderCondition( Pageable pageable ){
+    private OrderSpecifier orderCondition( final Pageable pageable ){
         for (Sort.Order o : pageable.getSort()) {
             PathBuilder<? extends Board> pathBuilder = new PathBuilder<>(board.getType(), board.getMetadata());
             return new OrderSpecifier(o.isAscending() ? Order.ASC : Order.DESC,
@@ -128,19 +124,17 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
         return new OrderSpecifier(Order.DESC, board.createdDate);
     }
 
-    private BooleanExpression titleContains(String title){
+    private BooleanExpression titleContains(final String title){
         return StringUtils.hasText(title) ? board.title.title.contains(title) : null;
     }
-    private BooleanExpression contentContains(String content){
+    private BooleanExpression contentContains(final String content){
         return StringUtils.hasText(content) ? board.content.content.contains(content) : null;
     }
-    private BooleanExpression emailContains(String email){
+    private BooleanExpression emailContains(final String email){
         return StringUtils.hasText(email) ? board.member.email.email.contains(email) : null;
     }
-    private BooleanExpression categoryIs(String category){
-        return StringUtils.hasText(category) ? board.category.name.eq(category) : null;
-    }
-    private BooleanExpression boardIdEq(Long id){
+
+    private BooleanExpression boardIdEq(final Long id){
         return id != null ? board.id.eq(id) : null;
     }
 

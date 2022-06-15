@@ -1,9 +1,9 @@
-package com.my.blog.board.vo.request;
+package com.my.blog.board.dto.request;
 
 import com.my.blog.board.domain.Board;
-import com.my.blog.board.domain.Status;
-import com.my.blog.board.domain.Content;
-import com.my.blog.board.domain.Title;
+import com.my.blog.board.domain.vo.Status;
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Title;
 import lombok.*;
 import org.springframework.lang.Nullable;
 

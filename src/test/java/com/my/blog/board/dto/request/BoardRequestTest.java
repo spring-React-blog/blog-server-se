@@ -1,7 +1,7 @@
-package com.my.blog.board.vo.request;
+package com.my.blog.board.dto.request;
 
-import com.my.blog.board.domain.Content;
-import com.my.blog.board.domain.Title;
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Title;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

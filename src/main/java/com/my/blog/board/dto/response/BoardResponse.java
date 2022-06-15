@@ -1,11 +1,12 @@
-package com.my.blog.board.vo.response;
+package com.my.blog.board.dto.response;
 
 import com.my.blog.board.domain.Board;
-import com.my.blog.board.domain.Content;
-import com.my.blog.board.domain.Title;
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Title;
 import com.my.blog.category.entity.Category;
 import com.my.blog.count.entity.BoardCount;
 import com.my.blog.member.entity.Member;
+import com.my.blog.member.entity.vo.Email;
 import lombok.*;
 
 @Getter
@@ -18,9 +19,8 @@ public class BoardResponse {
     private Title title;
     private Content content;
     private Category category;
-    private Member member;
-  //  private Email email;
-    private BoardCount boardCount;
+    private Email email;
+    private long viewCount;
 
     public String title(){
         return this.title.getTitle();
@@ -31,8 +31,8 @@ public class BoardResponse {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .category(board.getCategory())
-                .member(board.getMember())
-                .boardCount(board.getBoardCount())
+                .email(board.getMember().getEmail())
+                .viewCount(board.getBoardCount().getViewCount())
                 .build();
     }
 

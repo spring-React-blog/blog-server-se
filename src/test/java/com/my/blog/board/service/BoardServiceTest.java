@@ -1,24 +1,26 @@
 package com.my.blog.board.service;
 
 import com.my.blog.board.domain.Board;
-import com.my.blog.board.domain.Status;
+import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.repository.BoardRepositoryImpl;
-import com.my.blog.board.vo.BoardSchCondition;
-import com.my.blog.board.domain.Content;
-import com.my.blog.board.domain.Title;
-import com.my.blog.board.vo.request.BoardRequest;
-import com.my.blog.board.vo.response.BoardResponse;
+import com.my.blog.board.dto.BoardSchCondition;
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Title;
+import com.my.blog.board.dto.request.BoardRequest;
+import com.my.blog.board.dto.response.BoardResponse;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.category.vo.CategoryRequest;
 import com.my.blog.count.service.BoardCountService;
 import com.my.blog.member.entity.Member;
+import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.dto.ModelMapper;
 import com.my.blog.member.dto.MemberResponse;
 import com.my.blog.member.dto.request.CreateRequest;
 import com.my.blog.member.entity.vo.Password;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,7 +64,7 @@ class BoardServiceTest {
         CreateRequest request = CreateRequest.builder()
                 .email(Email.from("test@google.com"))
                 .password(Password.from("nono"))
-                .name("이승은")
+                .name(Name.from("이승은"))
                 .build();
 
         this.memberId = memberService.save(ModelMapper.createMember(request));
@@ -113,7 +115,7 @@ class BoardServiceTest {
     public void getBoard(){
         BoardResponse board = boardService.getBoard(Long.valueOf(1));
 
-        Long viewCount = board.getBoardCount().getViewCount();
+        Long viewCount = board.getViewCount();
         assertThat(board.getId()).isEqualTo(1);
         assertThat(viewCount).isEqualTo(viewCount+1);
 
@@ -161,5 +163,14 @@ class BoardServiceTest {
         }
     }
 
+    @Test
+    @DisplayName("count")
+    public void count(){
+        BoardSchCondition condition = new BoardSchCondition();
+        JPAQuery<Long> query = repository.countQuery(condition);
+        Long count = query.fetchOne();
+        System.out.println("count  > "+count);
+        assertThat(count).isEqualTo(1);
+    }
 
 }

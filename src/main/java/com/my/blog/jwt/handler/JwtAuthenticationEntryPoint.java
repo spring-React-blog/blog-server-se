@@ -2,8 +2,8 @@ package com.my.blog.jwt.handler;
 
 
 import com.my.blog.common.errorcode.ErrorCode;
-import com.my.blog.common.errorcode.JWTErrorCode;
-import com.my.blog.common.errorcode.MemberErrorCode;
+import com.my.blog.jwt.error.JWTErrorCode;
+import com.my.blog.member.error.MemberErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

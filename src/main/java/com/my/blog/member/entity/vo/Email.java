@@ -15,7 +15,7 @@ public class Email {
     @javax.validation.constraints.Email
     private String email;
 
-    public static Email from(String email){
+    public static Email from(String email) {
         return new Email(email);
     }
 }
