@@ -1,9 +1,6 @@
 package com.my.blog.member.entity.dto;
 
-import com.my.blog.member.entity.vo.Birth;
-import com.my.blog.member.entity.vo.Email;
-import com.my.blog.member.entity.vo.NickName;
-import com.my.blog.member.entity.vo.Password;
+import com.my.blog.member.entity.vo.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -14,7 +11,7 @@ import lombok.ToString;
 public class MemberDTO {
     private Email email;
     private Password password;
-    private String name;
+    private Name name;
     private NickName nickname;
     private Birth birth;
 }

@@ -1,7 +1,7 @@
 package com.my.blog.jwt;
 
 import com.my.blog.common.exception.CommonException;
-import com.my.blog.common.errorcode.MemberErrorCode;
+import com.my.blog.member.error.MemberErrorCode;
 import com.my.blog.jwt.dto.AccessToken;
 import com.my.blog.jwt.dto.RefreshToken;
 import com.my.blog.jwt.dto.TokenDTO;

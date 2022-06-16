@@ -45,9 +45,6 @@ class BoardServiceTest {
     BoardService boardService;
 
     @Autowired
-    BoardCountService boardCountService;
-
-    @Autowired
     MemberService memberService;
 
     @Autowired
@@ -130,8 +127,6 @@ class BoardServiceTest {
         //  condition.setTitle(Title.of("타이틀"));
 
         PageRequest pageable = PageRequest.of(0, 10);
-        //Page<BoardResponse> boards = boardService.getBoards(condition, pageable);
-
         List<BoardResponse> boardList = repository.getBoardList(condition, pageable);
         System.out.println("전체 사이즈 > "+boardList.size());
         for (BoardResponse b : boardList){
@@ -153,12 +148,11 @@ class BoardServiceTest {
         Page<BoardResponse> boards = boardService.getBoards(condition, pageable);
 
         List<BoardResponse> content = boards.getContent();
-
         System.out.println("size==" + boards.getTotalElements() + " , " + content.size());
 
         for (BoardResponse res: content
              ) {
-            System.out.println("BoardResponse > "+ res.getId() + "," + res.title());
+            System.out.println("BoardResponse > "+ res.getId() + ", title=" + res.title());
 
         }
     }

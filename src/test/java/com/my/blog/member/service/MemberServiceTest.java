@@ -1,6 +1,7 @@
 package com.my.blog.member.service;
 
 import com.my.blog.member.entity.dto.MemberDTO;
+import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.NickName;
 import com.my.blog.member.entity.vo.Password;
 import com.my.blog.member.entity.vo.RoleType;
@@ -28,7 +29,7 @@ class MemberServiceTest {
     public void save(){
         CreateRequest request = CreateRequest.builder()
                 .password(Password.from("ddddd"))
-                .name("seungeun")
+                .name(Name.from("seungeun"))
                 .nickName(NickName.from("dd"))
                 .roleType(RoleType.USER)
                 .build();

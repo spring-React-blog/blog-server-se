@@ -1,4 +1,4 @@
-package com.my.blog.board.domain;
+package com.my.blog.board.domain.vo;
 
 public enum Status {
     TRUE("공개"),FALSE("비공개");

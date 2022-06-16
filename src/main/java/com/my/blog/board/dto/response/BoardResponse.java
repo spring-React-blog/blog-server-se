@@ -18,7 +18,7 @@ public class BoardResponse {
     private Long id;
     private Title title;
     private Content content;
-    private Category category;
+    private String categoryName;
     private Email email;
     private long viewCount;
 
@@ -30,7 +30,7 @@ public class BoardResponse {
                 .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
-                .category(board.getCategory())
+                .categoryName(board.getCategory().getName())
                 .email(board.getMember().getEmail())
                 .viewCount(board.getBoardCount().getViewCount())
                 .build();

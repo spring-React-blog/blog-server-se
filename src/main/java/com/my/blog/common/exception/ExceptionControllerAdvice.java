@@ -3,6 +3,7 @@ package com.my.blog.common.exception;
 import com.my.blog.common.errorcode.ErrorCode;
 import com.my.blog.common.response.ResponseEnvelope;
 import com.my.blog.common.response.ResponseHeader;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -22,8 +23,8 @@ public class ExceptionControllerAdvice  extends ResponseEntityExceptionHandler {
     protected ResponseEnvelope<ErrorResponse> handleException(Exception e){
 
         ResponseHeader header = ResponseHeader.builder()
-                .code("500")
-                .status(e.getCause().toString())
+                .code(e.getCause().toString())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(e.getMessage())
                 .build();
         return new ResponseEnvelope<>(header,new ErrorResponse());

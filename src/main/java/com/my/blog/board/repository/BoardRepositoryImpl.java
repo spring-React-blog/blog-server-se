@@ -49,8 +49,8 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                 ))
                 .from(board)
                 .leftJoin(board.category, category)
-                .leftJoin(board.boardCount, boardCount)
-                .leftJoin(board.member, member)
+                .innerJoin(board.boardCount, boardCount)
+                .innerJoin(board.member, member)
                 .where(boardIdEq(condition.getBoardId()),
                         titleContains(condition.title()),
                         contentContains(condition.content()),
@@ -89,13 +89,13 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                ))
                 .from(board)
                 .leftJoin(board.category, category)
-                .leftJoin(board.boardCount, boardCount)
-                .leftJoin(board.member, member)
-//                .where(boardIdEq(condition.getBoardId()),
-//                        titleContains(condition.title()),
-//                        contentContains(condition.content()),
-//                        emailContains(condition.memberEmail()),
-//                )
+                .innerJoin(board.boardCount, boardCount)
+                .innerJoin(board.member, member)
+                .where(boardIdEq(condition.getBoardId()),
+                        titleContains(condition.title()),
+                        contentContains(condition.content()),
+                        emailContains(condition.memberEmail())
+                )
                 .orderBy(orderCondition(pageable))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

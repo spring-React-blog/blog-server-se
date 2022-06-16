@@ -4,12 +4,13 @@ import com.my.blog.common.errorcode.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 public class ResponseHeader {
     private String code;
-    private String status;
+    private HttpStatus status;
     private String message;
 
     private ResponseHeader(ResponseHeaderBuilder builder){
@@ -24,8 +25,8 @@ public class ResponseHeader {
 
     public static ResponseHeader ok(){
         return new ResponseHeaderBuilder()
-                .code("200")
-                .status("정상")
+                .code("정상")
+                .status(HttpStatus.OK)
                 .message("success")
                 .build();
     }
@@ -40,7 +41,7 @@ public class ResponseHeader {
     @Getter
     public static class ResponseHeaderBuilder {
         private String code;
-        private String status;
+        private HttpStatus status;
         private String message;
 
         ResponseHeaderBuilder(){}
@@ -50,7 +51,7 @@ public class ResponseHeader {
             return this;
         }
 
-        public ResponseHeaderBuilder status(String status){
+        public ResponseHeaderBuilder status(HttpStatus status){
             this.status = status;
             return this;
         }

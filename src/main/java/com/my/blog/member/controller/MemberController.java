@@ -32,4 +32,9 @@ public class MemberController {
         MemberResponse update = memberService.update(ModelMapper.updateMember(request));
         return new ResponseEnvelope<>(ResponseHeader.ok(), update);
     }
+    @DeleteMapping("/members")
+    public ResponseEnvelope<MemberResponse> delete(@PathVariable Long id){
+         memberService.deleteById(id);
+        return new ResponseEnvelope<>(ResponseHeader.ok(), null);
+    }
 }

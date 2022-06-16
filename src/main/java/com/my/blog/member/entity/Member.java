@@ -1,10 +1,11 @@
 package com.my.blog.member.entity;
 
+import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,13 +29,15 @@ public class Member {
     private Password password;
 
     @Column(name="name")
-    private String name;
+    @Embedded
+    private Name name;
 
     @Column(name="nickname")
     @Embedded
     private NickName nickname;
 
     @Column(name="birth")
+    @Embedded
     private Birth birth;
 
     @Column(name="roleType")
@@ -50,7 +53,7 @@ public class Member {
     public Member(
             Email email,
             Password password,
-            String name,
+            Name name,
             NickName nickName,
             RoleType roleType
     ){
@@ -59,6 +62,11 @@ public class Member {
         this.name = name;
         this.nickname = nickName;
         this.roleType = roleType;
+    }
+
+    public Member encode(PasswordEncoder encoder){
+        this.password = this.password.encode(encoder);
+        return this;
     }
     public String email() {
         return this.getEmail().getEmail();
@@ -69,5 +77,9 @@ public class Member {
         this.nickname = member.getNickname();
         this.name = member.getName();
         return this;
+    }
+
+    public boolean emailEquals(String email){
+        return this.email.equals(email);
     }
 }
