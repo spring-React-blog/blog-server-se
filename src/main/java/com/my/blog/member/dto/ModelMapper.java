@@ -41,5 +41,20 @@ public class ModelMapper {
                 .build();
     }
 
+    public static MemberResponse getResponse(Member member){
+        return MemberResponse.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .nickName(member.getNickname())
+                .build();
+    }
 
+    public static Member getMember(MemberResponse response){
+        return Member.builder()
+                .nickName(response.getNickName())
+                .name(response.getName())
+                .email(response.getEmail())
+                .build();
+    }
 }

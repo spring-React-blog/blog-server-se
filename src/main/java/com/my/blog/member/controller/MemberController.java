@@ -1,7 +1,8 @@
 package com.my.blog.member.controller;
 
-import com.my.blog.common.response.ResponseEnvelope;
-import com.my.blog.common.response.ResponseHeader;
+import com.my.blog.global.common.response.ResponseEnvelope;
+import com.my.blog.global.common.response.ResponseHeader;
+import com.my.blog.member.entity.Member;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.member.dto.ModelMapper;
 import com.my.blog.member.dto.request.CreateRequest;
@@ -23,7 +24,9 @@ public class MemberController {
 
     @GetMapping("/members/{id}")
     public ResponseEnvelope<MemberResponse> profile(@PathVariable Long id){
-        MemberResponse content = memberService.findById(id);
+        //MemberResponse content = memberService.findById(id);
+        Member mem = memberService.findById(id);
+        MemberResponse content = ModelMapper.getResponse(mem);
         return new ResponseEnvelope<>(ResponseHeader.ok(),content);
     }
 

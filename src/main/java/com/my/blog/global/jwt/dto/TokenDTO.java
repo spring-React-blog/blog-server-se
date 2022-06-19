@@ -1,4 +1,4 @@
-package com.my.blog.jwt.dto;
+package com.my.blog.global.jwt.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

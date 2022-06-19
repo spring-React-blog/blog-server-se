@@ -1,6 +1,6 @@
-package com.my.blog.common.response;
+package com.my.blog.global.common.response;
 
-import com.my.blog.common.errorcode.ErrorCode;
+import com.my.blog.global.common.errorcode.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

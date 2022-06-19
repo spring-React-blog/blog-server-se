@@ -1,4 +1,4 @@
-package com.my.blog.config;
+package com.my.blog.global.config;
 
 import com.querydsl.core.annotations.Config;
 import com.querydsl.jpa.impl.JPAQueryFactory;

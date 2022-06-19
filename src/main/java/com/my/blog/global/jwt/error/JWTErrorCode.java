@@ -1,6 +1,6 @@
-package com.my.blog.jwt.error;
+package com.my.blog.global.jwt.error;
 
-import com.my.blog.common.errorcode.ErrorCode;
+import com.my.blog.global.common.errorcode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum JWTErrorCode implements ErrorCode {

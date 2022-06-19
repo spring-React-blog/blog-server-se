@@ -1,4 +1,4 @@
-package com.my.blog.common.errorcode;
+package com.my.blog.global.common.errorcode;
 
 import org.springframework.http.HttpStatus;
 

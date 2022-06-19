@@ -1,9 +1,9 @@
-package com.my.blog.config;
+package com.my.blog.global.config;
 
-import com.my.blog.jwt.TokenProvider;
-import com.my.blog.jwt.handler.JwtAccessDeniedHandler;
-import com.my.blog.jwt.handler.JwtAuthenticateFilter;
-import com.my.blog.jwt.handler.JwtAuthenticationEntryPoint;
+import com.my.blog.global.jwt.TokenProvider;
+import com.my.blog.global.jwt.handler.JwtAccessDeniedHandler;
+import com.my.blog.global.jwt.handler.JwtAuthenticateFilter;
+import com.my.blog.global.jwt.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

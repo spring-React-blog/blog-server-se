@@ -30,12 +30,5 @@ public class MemberResponse {
         this.nickName = nickName;
     }
 
-    public static MemberResponse of(Member member){
-        return MemberResponse.builder()
-                .id(member.getId())
-                .email(member.getEmail())
-                .name(member.getName())
-                .nickName(member.getNickname())
-                .build();
-    }
+
 }

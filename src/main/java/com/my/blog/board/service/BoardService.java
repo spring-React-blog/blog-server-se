@@ -5,7 +5,7 @@ import com.my.blog.board.repository.BoardRepository;
 import com.my.blog.board.dto.BoardSchCondition;
 import com.my.blog.board.dto.response.BoardResponse;
 import com.my.blog.board.error.BoardErrorCode;
-import com.my.blog.common.exception.CommonException;
+import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.count.service.BoardCountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,11 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-
 @RequiredArgsConstructor
-@Service
 @Transactional
+@Service
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardCountService boardCountService;
@@ -27,14 +25,10 @@ public class BoardService {
         return savedBoard.getId();
     }
 
-    public BoardResponse getBoard(final Long id){
+    public Board getBoard(final Long id){
         Board board = boardRepository.findById(id).orElseThrow(() -> new CommonException(BoardErrorCode.BOARD_NOT_FOUND));
         boardCountService.increaseViewCount(board.getBoardCount().getId());
-        return BoardResponse.toResponse(board);
-    }
-    @Transactional(readOnly = true)
-    public Page<BoardResponse> getBoards(final BoardSchCondition condition, final Pageable pageable){
-        return boardRepository.search(condition,pageable);
+        return board;
     }
 
     public void updateBoard(final Board updateBoard, final Long id, final String memberId){

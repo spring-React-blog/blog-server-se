@@ -1,6 +1,6 @@
-package com.my.blog.jwt.handler;
+package com.my.blog.global.jwt.handler;
 
-import com.my.blog.jwt.TokenProvider;
+import com.my.blog.global.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

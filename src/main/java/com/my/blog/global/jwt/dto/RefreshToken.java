@@ -1,4 +1,4 @@
-package com.my.blog.jwt.dto;
+package com.my.blog.global.jwt.dto;
 
 import lombok.Getter;
 

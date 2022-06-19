@@ -1,11 +1,11 @@
 package com.my.blog.auth.service;
 
-import com.my.blog.jwt.error.JWTErrorCode;
+import com.my.blog.global.jwt.error.JWTErrorCode;
 import com.my.blog.member.error.MemberErrorCode;
-import com.my.blog.common.exception.CommonException;
-import com.my.blog.jwt.TokenProvider;
-import com.my.blog.jwt.dto.AccessToken;
-import com.my.blog.jwt.dto.TokenDTO;
+import com.my.blog.global.common.exception.CommonException;
+import com.my.blog.global.jwt.TokenProvider;
+import com.my.blog.global.jwt.dto.AccessToken;
+import com.my.blog.global.jwt.dto.TokenDTO;
 import com.my.blog.member.repository.MemberRepository;
 import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.vo.Password;

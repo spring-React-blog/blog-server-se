@@ -1,6 +1,6 @@
-package com.my.blog.common.exception;
+package com.my.blog.global.common.exception;
 
-import com.my.blog.common.errorcode.ErrorCode;
+import com.my.blog.global.common.errorcode.ErrorCode;
 import lombok.Getter;
 
 @Getter

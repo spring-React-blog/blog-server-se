@@ -1,55 +1,84 @@
 package com.my.blog.board.controller;
 
 import com.my.blog.board.domain.Board;
+import com.my.blog.board.service.BoardSearchService;
 import com.my.blog.board.service.BoardService;
 import com.my.blog.board.dto.BoardSchCondition;
 import com.my.blog.board.dto.request.BoardRequest;
 import com.my.blog.board.dto.response.BoardResponse;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
-import com.my.blog.common.response.ResponseEnvelope;
-import com.my.blog.common.response.ResponseHeader;
+import com.my.blog.global.common.response.ResponseEnvelope;
+import com.my.blog.global.common.response.ResponseHeader;
+import com.my.blog.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 @RestController
 public class BoardController {
 
     private final BoardService boardService;
-    private final CategoryService categoryService;
-
-    @PostMapping("/boards")
-    public ResponseEnvelope<BoardResponse> save(@RequestBody @Valid BoardRequest request){
-        Category category = categoryService.findById(request.getCategoryId());
-        Board board = request.toEntity();
-
-        Long id = boardService.save(board);
-
-        BoardResponse body =  BoardResponse.builder()
-                .id(id)
-                .build();
-
-        return new ResponseEnvelope(ResponseHeader.ok(),body);
-    }
+    private final BoardSearchService boardSearchService;
 
     @GetMapping("/boards")
-    public ResponseEnvelope<BoardResponse> list(@RequestBody BoardSchCondition condition, Pageable pageable){
+    public ResponseEntity<BoardResponse> getList(@RequestBody BoardSchCondition condition, Pageable pageable){
+        Page<BoardResponse> boards = boardSearchService.getBoards(condition, pageable);
 
-        Page<BoardResponse> boards = boardService.getBoards(condition, pageable);
-
-        List<BoardResponse> content = boards.getContent();
-
-        return new ResponseEnvelope(ResponseHeader.ok(),content);
+        return new ResponseEntity(boards,HttpStatus.OK);
     }
 
+    @GetMapping("/boards/{boardId}")
+    public ResponseEntity<BoardResponse> getOne(@PathVariable Long boardId){
+        Board board = boardService.getBoard(boardId);
+        BoardResponse boardResponse = BoardResponse.toResponse(board);
+
+        return new ResponseEntity(boardResponse,HttpStatus.OK);
+    }
+
+   /* @GetMapping("/boards/category/{parents}/{child}")
+    public ResponseEnvelope<BoardResponse> getOne(@PathVariable String parents, @PathVariable String child){
+
+
+        return new ResponseEntity(HttpStatus.OK);
+    }*/
+
+    @PostMapping("/boards")
+    public ResponseEntity<Long> save(@RequestBody @Valid BoardRequest request){
+        Board board = request.toEntity();
+        Long id = boardService.save(board);
+
+        return new ResponseEntity(id,HttpStatus.OK);
+    }
+
+
+    @PutMapping("/boards")
+    public ResponseEntity<Long> update(@RequestBody @Valid BoardRequest request){
+        Board board = request.toEntity();
+        boardService.updateBoard(board, board.getId(), CustomUserDetails.getPrincipal().getUsername());
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/boards/{boardId}")
+    public ResponseEntity<BoardResponse> delete(@PathVariable Long boardId){
+        boardService.deleteBoard(boardId, CustomUserDetails.getPrincipal().getUsername());
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 }

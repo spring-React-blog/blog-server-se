@@ -7,6 +7,7 @@ import com.my.blog.member.entity.vo.RoleType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
@@ -27,7 +28,9 @@ public class CustomUserDetails implements UserDetails , Serializable {
         this.password = member.getPassword();
         this.role = member.getRoleType();
     }
-
+    public static CustomUserDetails getPrincipal() {
+        return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+role));

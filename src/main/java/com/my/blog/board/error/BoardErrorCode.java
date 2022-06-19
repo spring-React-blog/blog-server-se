@@ -1,6 +1,6 @@
 package com.my.blog.board.error;
 
-import com.my.blog.common.errorcode.ErrorCode;
+import com.my.blog.global.common.errorcode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum BoardErrorCode implements ErrorCode {

@@ -4,7 +4,7 @@ import com.my.blog.board.domain.vo.Content;
 import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.domain.vo.Title;
 import com.my.blog.category.entity.Category;
-import com.my.blog.common.entity.BaseTimeEntity;
+import com.my.blog.global.common.entity.BaseTimeEntity;
 import com.my.blog.count.entity.BoardCount;
 import com.my.blog.member.entity.Member;
 import lombok.*;

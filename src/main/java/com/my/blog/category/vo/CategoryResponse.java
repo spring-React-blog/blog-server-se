@@ -1,8 +1,6 @@
 package com.my.blog.category.vo;
 
-import com.my.blog.common.response.ResponseHeader;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -28,16 +28,16 @@ import static com.my.blog.member.entity.QMember.member;
 public class BoardRepositoryImpl implements BoardSearchRepository{
     private final JPAQueryFactory queryFactory;
 
-    public Page<BoardResponse> search2(BoardSchCondition condition, Pageable pageable) {
-
+    @Override
+    public Page<BoardResponse> search(BoardSchCondition condition, Pageable pageable) {
         List<BoardResponse> responses = getBoardList( condition,  pageable);
         JPAQuery<Long> countQuery = countQuery(condition);
 
         return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
     }
-    @Override
-    public Page<BoardResponse> search(final BoardSchCondition condition, final Pageable pageable) {
-        List<BoardResponse> responses = queryFactory
+
+    public List<BoardResponse> getBoardList(final BoardSchCondition condition,final Pageable pageable){
+        return queryFactory
                 .select(Projections.constructor(
                         BoardResponse.class,
                         board.id,
@@ -47,46 +47,6 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                         board.member.email,
                         board.boardCount.viewCount
                 ))
-                .from(board)
-                .leftJoin(board.category, category)
-                .innerJoin(board.boardCount, boardCount)
-                .innerJoin(board.member, member)
-                .where(boardIdEq(condition.getBoardId()),
-                        titleContains(condition.title()),
-                        contentContains(condition.content()),
-                        emailContains(condition.memberEmail())
-                )
-                .orderBy(orderCondition(pageable))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        JPAQuery<Long> countQuery = queryFactory
-                .select(board.count())
-                .from(board)
-                .leftJoin(board.category, category)
-                .leftJoin(board.member, member)
-                .where(
-                        boardIdEq(condition.getBoardId()),
-                        titleContains(condition.title()),
-                        contentContains(condition.content()),
-                        emailContains(condition.memberEmail())
-                );
-
-        return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
-    }
-
-    public List<BoardResponse> getBoardList(final BoardSchCondition condition,final Pageable pageable){
-       return queryFactory
-               .select(Projections.constructor(
-                       BoardResponse.class,
-                       board.id,
-                       board.title,
-                       board.content,
-                       board.category.name,
-                       board.member.email,
-                       board.boardCount.viewCount
-               ))
                 .from(board)
                 .leftJoin(board.category, category)
                 .innerJoin(board.boardCount, boardCount)

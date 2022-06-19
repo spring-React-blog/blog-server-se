@@ -1,7 +1,7 @@
 package com.my.blog.member.service;
 
 import com.my.blog.member.error.MemberErrorCode;
-import com.my.blog.common.exception.CommonException;
+import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.dto.MemberDTO;
 import com.my.blog.member.repository.MemberRepository;
@@ -33,7 +33,7 @@ public class MemberService {
                 .orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
 
         Member updated = findMember.updateInfo(member);
-        return MemberResponse.of(updated);
+        return ModelMapper.getResponse(updated);
     }
 
     @Transactional
@@ -41,11 +41,15 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
-    public MemberResponse findById(Long id){
-        return memberRepository.findById(id).map(MemberResponse::of)
+    /*public MemberResponse findById(Long id){
+        return memberRepository.findById(id).map(ModelMapper::getResponse)
+                .orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND))
+                ;
+    }*/
+    public Member findById(Long id){
+        return memberRepository.findById(id)
                 .orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND))
                 ;
     }
-
 
 }

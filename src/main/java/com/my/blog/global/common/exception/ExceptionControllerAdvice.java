@@ -1,12 +1,12 @@
-package com.my.blog.common.exception;
+package com.my.blog.global.common.exception;
 
-import com.my.blog.common.errorcode.ErrorCode;
-import com.my.blog.common.response.ResponseEnvelope;
-import com.my.blog.common.response.ResponseHeader;
+import com.my.blog.global.common.errorcode.ErrorCode;
+import com.my.blog.global.common.response.ResponseEnvelope;
+import com.my.blog.global.common.response.ResponseHeader;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
@@ -25,6 +25,16 @@ public class ExceptionControllerAdvice  extends ResponseEntityExceptionHandler {
         ResponseHeader header = ResponseHeader.builder()
                 .code(e.getCause().toString())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message(e.getMessage())
+                .build();
+        return new ResponseEnvelope<>(header,new ErrorResponse());
+    }
+//ValidationResult.create(bindException, messageSource, locale);
+    @ExceptionHandler(BindException.class)
+    public ResponseEnvelope<ErrorResponse>  handleBindException(BindException e) {
+        ResponseHeader header = ResponseHeader.builder()
+                .code(e.getCause().toString())
+                .status(HttpStatus.BAD_REQUEST)
                 .message(e.getMessage())
                 .build();
         return new ResponseEnvelope<>(header,new ErrorResponse());

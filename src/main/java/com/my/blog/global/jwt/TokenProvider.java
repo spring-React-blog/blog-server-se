@@ -1,10 +1,10 @@
-package com.my.blog.jwt;
+package com.my.blog.global.jwt;
 
-import com.my.blog.common.exception.CommonException;
+import com.my.blog.global.common.exception.CommonException;
+import com.my.blog.global.jwt.dto.RefreshToken;
 import com.my.blog.member.error.MemberErrorCode;
-import com.my.blog.jwt.dto.AccessToken;
-import com.my.blog.jwt.dto.RefreshToken;
-import com.my.blog.jwt.dto.TokenDTO;
+import com.my.blog.global.jwt.dto.AccessToken;
+import com.my.blog.global.jwt.dto.TokenDTO;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.repository.MemberRepository;
 import com.my.blog.member.entity.vo.Email;

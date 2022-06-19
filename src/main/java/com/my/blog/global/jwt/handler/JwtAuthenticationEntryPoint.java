@@ -1,8 +1,8 @@
-package com.my.blog.jwt.handler;
+package com.my.blog.global.jwt.handler;
 
 
-import com.my.blog.common.errorcode.ErrorCode;
-import com.my.blog.jwt.error.JWTErrorCode;
+import com.my.blog.global.common.errorcode.ErrorCode;
+import com.my.blog.global.jwt.error.JWTErrorCode;
 import com.my.blog.member.error.MemberErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;

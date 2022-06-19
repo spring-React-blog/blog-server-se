@@ -1,19 +1,17 @@
-package com.my.blog.member.error;
+package com.my.blog.count.error;
 
 import com.my.blog.global.common.errorcode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public enum MemberErrorCode implements ErrorCode {
+public enum BoardCountErrorCode implements ErrorCode {
 
-    PASSWORD_NULL_ERROR(HttpStatus.BAD_REQUEST, "M001", "비밀번호가 없습니다."),
-    USER_NOT_FOUND(HttpStatus.NO_CONTENT, "M002", "없는 회원 입니다."),
-    NON_LOGIN(HttpStatus.NOT_ACCEPTABLE, "M002", "로그인이 필요한 메뉴 입니다.");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "B001", "해당 정보를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
     private final String message;
 
-    MemberErrorCode(HttpStatus status, String code, String message) {
+    BoardCountErrorCode(HttpStatus status, String code, String message) {
         this.status = status;
         this.code = code;
         this.message = message;
