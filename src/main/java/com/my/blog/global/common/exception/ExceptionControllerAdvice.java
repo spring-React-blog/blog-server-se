@@ -29,14 +29,5 @@ public class ExceptionControllerAdvice  extends ResponseEntityExceptionHandler {
                 .build();
         return new ResponseEnvelope<>(header,new ErrorResponse());
     }
-//ValidationResult.create(bindException, messageSource, locale);
-    @ExceptionHandler(BindException.class)
-    public ResponseEnvelope<ErrorResponse>  handleBindException(BindException e) {
-        ResponseHeader header = ResponseHeader.builder()
-                .code(e.getCause().toString())
-                .status(HttpStatus.BAD_REQUEST)
-                .message(e.getMessage())
-                .build();
-        return new ResponseEnvelope<>(header,new ErrorResponse());
-    }
+
 }
