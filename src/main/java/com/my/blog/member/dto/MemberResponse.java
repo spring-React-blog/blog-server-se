@@ -4,10 +4,7 @@ import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.NickName;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
