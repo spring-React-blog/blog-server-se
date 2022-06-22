@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -53,9 +54,9 @@ public class Member {
     @JoinColumn(name="member_count_id")
     private MemberCount memberCount;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="follower_id")
-    private Follower follower;
+    private List<Follower> follower;
 
     @Builder
     public Member(
