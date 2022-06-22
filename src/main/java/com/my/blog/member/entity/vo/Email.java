@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Embeddable
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access= AccessLevel.PRIVATE)
 public class Email {

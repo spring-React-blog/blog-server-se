@@ -32,13 +32,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             return;
         }
 
-        if(exception.equals(JWTErrorCode.EXPIRED_TOKEN.getCode())) {
+        if(exception.equals(JWTErrorCode.EXPIRED_TOKEN.getStatus())) {
             errorCode = JWTErrorCode.EXPIRED_TOKEN;
             setResponse(response, errorCode);
             return;
         }
 
-        if(exception.equals(JWTErrorCode.INVALID_TOKEN.getCode())) {
+        if(exception.equals(JWTErrorCode.INVALID_TOKEN.getStatus())) {
             errorCode = JWTErrorCode.INVALID_TOKEN;
             setResponse(response, errorCode);
         }
@@ -50,7 +50,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().println("{ \"message\" : \"" + errorCode.getMessage()
-                + "\", \"code\" : \"" +  errorCode.getCode()
                 + "\", \"status\" : " + errorCode.getStatus()
                 + ", \"errors\" : [ ] }");
     }
