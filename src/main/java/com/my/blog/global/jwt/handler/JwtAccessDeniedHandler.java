@@ -36,7 +36,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().println("{ \"message\" : \"" + errorCode.getMessage()
-                + "\", \"code\" : \"" +  errorCode.getCode()
                 + "\", \"status\" : " + errorCode.getStatus()
                 + ", \"errors\" : [ ] }");
     }

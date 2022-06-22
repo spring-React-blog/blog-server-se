@@ -30,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,7 +83,6 @@ class BoardServiceTest {
 
 
     @Test
-    @Order(1)
     public void create(){
         BoardRequest req =  BoardRequest.builder()
                 .title(Title.from("tt"))
@@ -106,7 +106,6 @@ class BoardServiceTest {
 
 
     @Test
-    @Order(2)
     @DisplayName("상세 보드")
     public void getBoard(){
         Board board = boardService.getBoard(Long.valueOf(1));
@@ -118,26 +117,6 @@ class BoardServiceTest {
     }
     
     @Test
-    @Order(3)
-    @DisplayName("레파지토리 리스트")
-    public void test(){
-        BoardSchCondition condition =  BoardSchCondition.builder()
-                .title(Title.from("dd"))
-                .build()
-                ;
-        // condition.setCategory(category);
-        //  condition.setTitle(Title.of("타이틀"));
-
-        PageRequest pageable = PageRequest.of(0, 10);
-        List<BoardResponse> boardList = repository.getBoardList(condition, pageable);
-        System.out.println("전체 사이즈 > "+boardList.size());
-        for (BoardResponse b : boardList){
-            System.out.println("id > "+b.getId() + ", title  = " + b.title());
-        }
-    }
-
-    @Test
-    @Order(4)
     @DisplayName("전체 보드 리스트")
     public void getBoardList(){
       //  Category category = categoryService.findById(categoryId);

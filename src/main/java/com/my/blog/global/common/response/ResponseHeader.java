@@ -32,7 +32,6 @@ public class ResponseHeader {
     }
     public static ResponseHeader error(ErrorCode errorCode){
         return new ResponseHeaderBuilder()
-                .code(errorCode.getCode())
                 .status(errorCode.getStatus())
                 .message(errorCode.getMessage())
                 .build();

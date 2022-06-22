@@ -9,10 +9,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Embeddable
+@Getter
+@EqualsAndHashCode
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode
-@ToString
 public class Password {
 
     @Size(min=8,max = 12,message = "8~12자 입력해주세요")
@@ -27,6 +27,9 @@ public class Password {
         return from(passwordEncoder.encode(this.password));
     }
 
+    public boolean matches(Password target, PasswordEncoder passwordEncoder){
+        return passwordEncoder.matches(this.password, target.getPassword());
+    }
     public static Password from(String password){
         return new Password(password);
     }
