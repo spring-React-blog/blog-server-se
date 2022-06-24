@@ -23,10 +23,10 @@ public class Board extends BaseTimeEntity {
     @Column(name="board_id")
     private Long id;
 
-    @Column(name="title")
+    @Embedded
     private Title title;
 
-    @Column(name="content")
+    @Embedded
     private Content content;
 
     @Column(name="open_status")

@@ -20,8 +20,7 @@ class CategoryServiceTest {
     @Test
     @DisplayName("카테고리 생성")
     public void create(){
-        CategoryRequest categoryRequest = new CategoryRequest();
-        categoryRequest.setName("java");
+        CategoryRequest categoryRequest = CategoryRequest.builder().name("스프링").build();
         Category category = categoryRequest.toEntity();
 
         Long savedId = categoryService.save(category);

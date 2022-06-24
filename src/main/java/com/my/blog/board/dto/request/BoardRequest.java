@@ -7,8 +7,11 @@ import com.my.blog.board.domain.vo.Title;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
-@Data
-@ToString
+import javax.validation.Valid;
+
+@Valid
+@Getter
+@Builder
 public class BoardRequest {
 
     private Title title;

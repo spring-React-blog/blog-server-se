@@ -1,12 +1,10 @@
 package com.my.blog.global.common.response;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Builder
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 public class ResponseEnvelope<T> {
     ResponseHeader header;
