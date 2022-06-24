@@ -6,7 +6,12 @@ import org.springframework.http.HttpStatus;
 public enum JWTErrorCode implements ErrorCode {
 
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "인증 토큰이 만료되었습니다."),
+    MALFORMED_TOKEN(HttpStatus.UNAUTHORIZED,  "잘못된 인증 토큰입니다. "),
+    UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED,  "지원하지 않는 인증 토큰입니다. "),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED,  "유효하지 않은 인증 토큰입니다. "),
+    INVALID_CLAIMS(HttpStatus.UNAUTHORIZED,  "유효하지 않은 인증 토큰입니다. "),
+    INVALID_SIGNITURE(HttpStatus.UNAUTHORIZED,  "유효하지 않은 인증 토큰입니다. "),
+
     NON_LOGIN(HttpStatus.NOT_ACCEPTABLE, "로그인이 필요한 메뉴입니다."),
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "접근 불가능한 회원입니다.");
 

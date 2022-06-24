@@ -9,6 +9,8 @@ import com.my.blog.global.jwt.dto.AccessToken;
 import com.my.blog.global.jwt.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/join")
-    public ResponseEnvelope<AuthTokenResponse> join(@RequestBody LoginRequest request){
+    public ResponseEntity<AuthTokenResponse> join(@RequestBody LoginRequest request){
         TokenDTO token = authService.login(request.getEmail(), request.getPassword());
 
         AuthTokenResponse response = AuthTokenResponse.builder()
@@ -28,11 +30,11 @@ public class AuthController {
                 .refreshToken(token.getRefreshToken())
                 .build();
 
-        return new ResponseEnvelope<>(ResponseHeader.ok(),response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/auth/login")
-    public ResponseEnvelope<AuthTokenResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<AuthTokenResponse> login(@RequestBody LoginRequest request){
         TokenDTO token = authService.login(request.getEmail(), request.getPassword());
 
         AuthTokenResponse response = AuthTokenResponse.builder()
@@ -40,15 +42,15 @@ public class AuthController {
                 .refreshToken(token.getRefreshToken())
                 .build();
 
-        return new ResponseEnvelope<>(ResponseHeader.ok(),response);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PostMapping("/auth/reissue")
-    public ResponseEnvelope<AuthTokenResponse> reissue(@RequestBody String refreshToken){
+    public ResponseEntity<AuthTokenResponse> reissue(@RequestBody String refreshToken){
 
-        AccessToken token = authService.reissue(refreshToken);
+        AccessToken token = authService.reissue(refreshToken).getAccessToken();
         AuthTokenResponse response = AuthTokenResponse.builder().accessToken(token).build();
-        return new ResponseEnvelope<>(ResponseHeader.ok(),response);
+        return new ResponseEntity<>(response,HttpStatus.OK);
 
     }
 }

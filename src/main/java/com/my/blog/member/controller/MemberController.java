@@ -31,26 +31,26 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEnvelope<MemberResponse> profile(@PathVariable Long id){
+    public ResponseEntity<MemberResponse> profile(@PathVariable Long id){
         MemberDTO dto = memberService.findById(id);
         MemberResponse content = mapper.getResponse(dto);
-        return new ResponseEnvelope<>(ResponseHeader.ok(),content);
+        return new ResponseEntity<>(content,HttpStatus.OK);
     }
 
     @GetMapping("/public/members")
-    public ResponseEnvelope<MemberResponse> memberList(@RequestBody MemberSchCondition condition){
-        return new ResponseEnvelope<>(ResponseHeader.ok(),null);
+    public ResponseEntity<MemberResponse> memberList(@RequestBody MemberSchCondition condition){
+        return new ResponseEntity<>(null,HttpStatus.OK);
     }
 
     @PutMapping("/members")
-    public ResponseEnvelope<MemberResponse> update(@RequestBody @Valid UpdateRequest request){
+    public ResponseEntity<MemberResponse> update(@RequestBody @Valid UpdateRequest request){
         MemberDTO dto = memberService.update(mapper.updateMember(request));
         MemberResponse response = mapper.getResponse(dto);
-        return new ResponseEnvelope<>(ResponseHeader.ok(), response);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
     @DeleteMapping("/members")
-    public ResponseEnvelope<MemberResponse> delete(@PathVariable Long id){
+    public ResponseEntity<MemberResponse> delete(@PathVariable Long id){
          memberService.deleteById(id);
-        return new ResponseEnvelope<>(ResponseHeader.ok(), null);
+        return new ResponseEntity<>( null,HttpStatus.OK);
     }
 }

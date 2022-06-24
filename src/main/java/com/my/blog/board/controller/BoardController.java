@@ -6,27 +6,16 @@ import com.my.blog.board.service.BoardService;
 import com.my.blog.board.dto.BoardSchCondition;
 import com.my.blog.board.dto.request.BoardRequest;
 import com.my.blog.board.dto.response.BoardResponse;
-import com.my.blog.category.entity.Category;
-import com.my.blog.category.service.CategoryService;
-import com.my.blog.global.common.response.ResponseEnvelope;
-import com.my.blog.global.common.response.ResponseHeader;
-import com.my.blog.security.CustomUserDetails;
+import com.my.blog.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 @RestController
@@ -67,16 +56,16 @@ public class BoardController {
 
 
     @PutMapping("/boards")
-    public ResponseEntity<Long> update(@RequestBody @Valid BoardRequest request){
+    public ResponseEntity<Long> update(@RequestBody @Valid BoardRequest request, @AuthenticationPrincipal CustomUserDetails userDetails){
         Board board = request.toEntity();
-        boardService.updateBoard(board, board.getId(), CustomUserDetails.getPrincipal().getUsername());
+        boardService.updateBoard(board, board.getId(), userDetails.getUsername());
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/boards/{boardId}")
-    public ResponseEntity<BoardResponse> delete(@PathVariable Long boardId){
-        boardService.deleteBoard(boardId, CustomUserDetails.getPrincipal().getUsername());
+    public ResponseEntity<BoardResponse> delete(@PathVariable Long boardId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        boardService.deleteBoard(boardId, userDetails.getUsername());
 
         return new ResponseEntity(HttpStatus.OK);
     }

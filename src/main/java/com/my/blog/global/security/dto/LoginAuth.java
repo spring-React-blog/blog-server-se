@@ -1,17 +1,15 @@
-package com.my.blog.auth.vo;
+package com.my.blog.global.security.dto;
 
 import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.vo.Password;
 import com.my.blog.member.entity.vo.RoleType;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class LoginRequest {
-
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class LoginAuth {
     private Email email;
     private Password password;
-
+    private RoleType roleType;
 }
