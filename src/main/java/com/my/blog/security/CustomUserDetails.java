@@ -28,7 +28,9 @@ public class CustomUserDetails implements UserDetails , Serializable {
         this.password = member.getPassword();
         this.role = member.getRoleType();
     }
-
+    public static CustomUserDetails getPrincipal() {
+        return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+role));

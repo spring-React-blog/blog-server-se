@@ -1,57 +1,49 @@
 package com.my.blog.auth.service;
 
-import com.my.blog.global.jwt.error.JWTErrorCode;
-import com.my.blog.member.error.MemberErrorCode;
 import com.my.blog.global.common.exception.CommonException;
+import com.my.blog.global.common.utils.StringUtil;
 import com.my.blog.global.jwt.TokenProvider;
-import com.my.blog.global.jwt.dto.AccessToken;
 import com.my.blog.global.jwt.dto.TokenDTO;
-import com.my.blog.member.repository.MemberRepository;
+import com.my.blog.global.security.CustomUserDetails;
+import com.my.blog.global.security.dto.LoginAuth;
 import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.vo.Password;
-import com.my.blog.security.CustomUserDetails;
+import com.my.blog.member.error.MemberErrorCode;
+import com.my.blog.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberRepository memberRepository;
-    private final AuthenticationManagerBuilder managerBuilder;
+    private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
-  /*  public TokenDTO save(Email email, Password password){
-        memberRepository.save()
-    }*/
 
-    public TokenDTO login(Email email, Password password){
-        String usrEmail = email.getEmail();
-        String usrPwd = password.password();
+    public TokenDTO login(final Email email, final Password password){
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 
-        CustomUserDetails userDetails = memberRepository.findByEmail(email)
-                .map(CustomUserDetails::new)
-                .orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
+        List<String> roles = authenticate.getAuthorities().stream()
+                .map(auth -> auth.getAuthority().replaceAll(CustomUserDetails.ROLE, ""))
+                .collect(toList());
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, usrPwd);
 
-        Authentication authenticate = managerBuilder.getObject().authenticate(token);
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-
-        return tokenProvider.createToken(usrEmail,authenticate);
+        return tokenProvider.generate(StringUtil.convertToStr(authenticate.getPrincipal(),""),roles);
     }
 
-    public AccessToken reissue(String refreshToken) {
-        if (!tokenProvider.validateToken(refreshToken)) {
-            throw new CommonException(JWTErrorCode.INVALID_TOKEN);
-        }
+    public TokenDTO reissue(final String refreshToken) {
+        tokenProvider.validateToken(refreshToken);
+        String email = tokenProvider.getIssuer(refreshToken);
+        LoginAuth loginAuth = memberRepository.findByLoginEmail(Email.from(email)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
 
-        Authentication authentication = tokenProvider.getAuthentication(refreshToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-        return tokenProvider.createToken(principal.getUsername(),authentication).getAccessToken();
+        return tokenProvider.generate(email, List.of(loginAuth.getRoleType().name()));
     }
 }

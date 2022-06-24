@@ -43,6 +43,7 @@ class MemberServiceTest {
 
     @Autowired
     ModelMapper mapper;
+
     @Autowired
     EntityMapper entityMapper;
 
@@ -102,7 +103,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("회원 수정")
-    public void update(){
+    public void update() {
         UpdateRequest update = UpdateRequest.builder()
                 .id(1L)
                 .nickName(NickName.from("hohoho")).build();
@@ -116,6 +117,7 @@ class MemberServiceTest {
         assertThat(updated.getNickname()).isEqualTo(NickName.from("hohoho"));
         assertThat(beforePassword).isEqualTo(updated.getPassword());
     }
+
     @Test
     @DisplayName("비밀번호 수정")
     public void updatePwd(){
@@ -128,9 +130,12 @@ class MemberServiceTest {
         Password beforePassword = before.getPassword();
 
         MemberDTO updated = memberService.update(memberDTO);
-        assertThat(updated.getNickname()).isEqualTo(NickName.from("dd"));
-        assertThat(beforePassword).isNotEqualTo(updated.getPassword());
+        assertThat(updated.getName()).isEqualTo(Name.from("seungeun"));
+        assertThat(updated.getNickname()).isEqualTo(NickName.from("hohoho"));
+        assertThat(beforePassword).isEqualTo(updated.getPassword());
+
     }
+
 
     @Test
     @DisplayName("회원 삭제")

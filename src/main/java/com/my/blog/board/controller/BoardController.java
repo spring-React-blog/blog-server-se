@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-
 @RequiredArgsConstructor
 @RestController
 public class BoardController {

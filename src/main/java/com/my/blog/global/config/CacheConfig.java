@@ -1,4 +1,4 @@
-package com.my.blog.config;
+package com.my.blog.global.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;

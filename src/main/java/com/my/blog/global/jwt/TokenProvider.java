@@ -2,17 +2,21 @@ package com.my.blog.global.jwt;
 
 import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.global.jwt.dto.RefreshToken;
+import com.my.blog.global.jwt.error.JWTErrorCode;
+import com.my.blog.global.security.dto.LoginAuth;
+import com.my.blog.member.entity.vo.RoleType;
 import com.my.blog.member.error.MemberErrorCode;
 import com.my.blog.global.jwt.dto.AccessToken;
 import com.my.blog.global.jwt.dto.TokenDTO;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.repository.MemberRepository;
 import com.my.blog.member.entity.vo.Email;
-import com.my.blog.security.CustomUserDetails;
+import com.my.blog.global.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,67 +30,46 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
-public class TokenProvider implements InitializingBean {
-    private static final String AUTHORITIES_KEY = "role";
+@RequiredArgsConstructor
+public class TokenProvider {
+    private static final String AUTHORITIES_KEY = "roles";
+    private static final String DELIMITER = ", ";
 
-    private final String secret;
-    private final long accessTokenValidityInMilliseconds;
-    private final long refreshTokenValidityInMilliseconds;
+    private final TokenProperties properties;
     private final MemberRepository memberRepository;
 
-    private Key key;
 
-    public TokenProvider(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.accessToken-validity-in-seconds}") long accessTokenValidityInMilliseconds,
-            @Value("${jwt.refreshToken-validity-in-seconds}") long refreshTokenValidityInMilliseconds,
-            MemberRepository memberRepository) {
-        this.secret = secret;
-        this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds * 1000;
-        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds * 1000;
-        this.memberRepository = memberRepository;
-    }
+    public TokenDTO generate(String email, List<String> roles) {
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
-    }
+        Date today = new Date();
+        Member member = memberRepository.findByEmail(Email.from(email)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
 
-    public TokenDTO createToken(String email, Authentication authentication){
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(joining(","));
+        AccessToken accessToken = new AccessToken(createToken(member.email(), roles, properties.getAccessTokenExpiredDate(today)));
+        RefreshToken refreshToken = new RefreshToken(createToken(member.email(), roles, properties.getRefreshTokenExpiredDate(today)));
 
-        long time = new Date().getTime();
-        Member member = memberRepository.findByEmail(Email.from(email)).orElseThrow(()->new CommonException(MemberErrorCode.USER_NOT_FOUND));
-        String actoken = createToken(member.getId(), authorities, new Date(time+accessTokenValidityInMilliseconds));
-        String retoken = createToken(member.getId(), authorities, new Date(time+refreshTokenValidityInMilliseconds));
-
-        AccessToken accessToken = new AccessToken(actoken);
-        RefreshToken refreshToken = new RefreshToken(retoken);
         return new TokenDTO(accessToken, refreshToken);
     }
 
-    public String createToken(Long id,String authorities,Date time){
+    public String createToken(String email, List<String> authorities, Date time) {
         return Jwts.builder()
-                .claim("id", id)
-                .claim(AUTHORITIES_KEY, authorities)
+                .setIssuer(email)
+                .claim(AUTHORITIES_KEY, String.join(DELIMITER, authorities))
                 .setExpiration(time)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(properties.getKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    public Authentication getAuthentication(String token){
+    public Authentication getAuthentication(String token) {
         Claims claims = Jwts
                 .parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(properties.getKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -95,37 +78,64 @@ public class TokenProvider implements InitializingBean {
                 .map(SimpleGrantedAuthority::new)
                 .collect(toList());
 
-        String id = String.valueOf(claims.get("id"));
+        String email = String.valueOf(claims.get("email"));
 
-        Member member = memberRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
-        CustomUserDetails customUserDetails = new CustomUserDetails(member);
+        LoginAuth loginAuth = memberRepository.findByLoginEmail(Email.from(email)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
+        CustomUserDetails customUserDetails = CustomUserDetails.from(loginAuth);
 
-        return new UsernamePasswordAuthenticationToken(customUserDetails,"password",authorities);
+        return new UsernamePasswordAuthenticationToken(customUserDetails, "password", authorities);
 
     }
 
-    public boolean validateToken(String token){
+    public String getIssuer(String token) {
+        return getClaims(token).getIssuer();
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(properties.getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public List<String> getRoles(String token) {
+        String roles = (String) getClaims(token)
+                .get(AUTHORITIES_KEY);
+        if(Objects.isNull(roles)) return List.of();
+        return Arrays.stream(roles.split(DELIMITER)).collect(toList());
+    }
+    public boolean validateToken(String token) {
         try {
             Jwts
                     .parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(properties.getKey())
                     .build()
                     .parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
+            throw new CommonException(JWTErrorCode.INVALID_SIGNITURE);
+
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
+            throw new CommonException(JWTErrorCode.MALFORMED_TOKEN);
+
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
+            throw new CommonException(JWTErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
+            throw new CommonException(JWTErrorCode.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
+            throw new CommonException(JWTErrorCode.INVALID_CLAIMS);
         }
-        return false;
+
 
     }
 
 
+
 }
+
