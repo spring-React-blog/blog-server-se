@@ -36,9 +36,6 @@ public final class CustomUserDetails extends User  {
         return List.of(getAuthority(role));
     }
 
-  /*  private static SimpleGrantedAuthority getAuthority(RoleType role){
-        return new SimpleGrantedAuthority(ROLE + role);
-    }*/
     public static List<? extends GrantedAuthority> getAuthorities(List<String> roles) {
         return roles.stream()
                 .map(CustomUserDetails::getAuthority)

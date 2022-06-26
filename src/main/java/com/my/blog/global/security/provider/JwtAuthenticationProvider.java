@@ -30,6 +30,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     }
 
+    /**
+     * Token 타입에 따른 Provider 지정
+     * */
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.isAssignableFrom(JwtAuthenticationToken.class);

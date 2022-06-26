@@ -35,56 +35,39 @@ import java.util.Objects;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-@Slf4j
-@Component
 @RequiredArgsConstructor
+@Component
 public class TokenProvider {
     private static final String AUTHORITIES_KEY = "roles";
     private static final String DELIMITER = ", ";
 
     private final TokenProperties properties;
-    private final MemberRepository memberRepository;
-
 
     public TokenDTO generate(String email, List<String> roles) {
-
-        Date today = new Date();
-        Member member = memberRepository.findByEmail(Email.from(email)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
-
-        AccessToken accessToken = new AccessToken(createToken(member.email(), roles, properties.getAccessTokenExpiredDate(today)));
-        RefreshToken refreshToken = new RefreshToken(createToken(member.email(), roles, properties.getRefreshTokenExpiredDate(today)));
+        AccessToken accessToken = generateAccessToken(email, roles );
+        RefreshToken refreshToken = generateRefreshToken(email, roles );
 
         return new TokenDTO(accessToken, refreshToken);
     }
 
-    public String createToken(String email, List<String> authorities, Date time) {
-        return Jwts.builder()
+    public AccessToken generateAccessToken(String email, List<String> roles) {
+        String token = Jwts.builder()
                 .setIssuer(email)
-                .claim(AUTHORITIES_KEY, String.join(DELIMITER, authorities))
-                .setExpiration(time)
+                .claim(AUTHORITIES_KEY, String.join(DELIMITER, roles))
+                .setExpiration(properties.getAccessTokenExpiredDate(new Date()))
                 .signWith(properties.getKey(), SignatureAlgorithm.HS512)
                 .compact();
+        return new AccessToken(token);
     }
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(properties.getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        List<? extends SimpleGrantedAuthority> authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(toList());
-
-        String email = String.valueOf(claims.get("email"));
-
-        LoginAuth loginAuth = memberRepository.findByLoginEmail(Email.from(email)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
-        CustomUserDetails customUserDetails = CustomUserDetails.from(loginAuth);
-
-        return new UsernamePasswordAuthenticationToken(customUserDetails, "password", authorities);
-
+    public RefreshToken generateRefreshToken(String email, List<String> roles) {
+        String token = Jwts.builder()
+                .setIssuer(email)
+                .claim(AUTHORITIES_KEY, String.join(DELIMITER, roles))
+                .setExpiration(properties.getRefreshTokenExpiredDate(new Date()))
+                .signWith(properties.getKey(), SignatureAlgorithm.HS512)
+                .compact();
+        return new RefreshToken(token);
     }
 
     public String getIssuer(String token) {
@@ -105,34 +88,20 @@ public class TokenProvider {
         if(Objects.isNull(roles)) return List.of();
         return Arrays.stream(roles.split(DELIMITER)).collect(toList());
     }
+
+    public Date getExpirationDate(String token){
+        return getClaims(token).getExpiration();
+    }
+
+    public boolean isTokenExpired(String token){
+        Date expirationDate = getExpirationDate(token);
+        return expirationDate.before(new Date());
+    }
+
     public boolean validateToken(String token) {
-        try {
-            Jwts
-                    .parserBuilder()
-                    .setSigningKey(properties.getKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
-            throw new CommonException(JWTErrorCode.INVALID_SIGNITURE);
-
-        } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
-            throw new CommonException(JWTErrorCode.MALFORMED_TOKEN);
-
-        } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
-            throw new CommonException(JWTErrorCode.EXPIRED_TOKEN);
-        } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
-            throw new CommonException(JWTErrorCode.UNSUPPORTED_TOKEN);
-        } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
-            throw new CommonException(JWTErrorCode.INVALID_CLAIMS);
-        }
-
-
+        if(isTokenExpired(token)) throw new CommonException(JWTErrorCode.EXPIRED_TOKEN);
+        if(getRoles(token).equals(List.of())) throw new CommonException(JWTErrorCode.INVALID_TOKEN);
+        return true;
     }
 
 

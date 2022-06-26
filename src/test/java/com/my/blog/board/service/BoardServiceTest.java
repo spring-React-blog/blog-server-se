@@ -11,17 +11,18 @@ import com.my.blog.board.repository.BoardRepositoryImpl;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.category.vo.CategoryRequest;
-import com.my.blog.member.dto.ModelMapper;
+import com.my.blog.member.controller.ModelMapper;
 import com.my.blog.member.dto.request.CreateRequest;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.Password;
 import com.my.blog.member.service.MemberService;
+import com.my.blog.member.service.dto.EntityMapper;
+import com.my.blog.member.service.dto.MemberDTO;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +31,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,10 +94,10 @@ class BoardServiceTest {
 
 
         Board board = req.toEntity();
-        Member member = memberService.findById(req.getMemberId());
+        MemberDTO memberDTO = memberService.findById(req.getMemberId());
         Category category = categoryService.findById(req.getCategoryId());
 
-        board.setMember(member);
+        board.setMember(EntityMapper.toEntity(memberDTO));
         board.setCategory(category);
 
         Long savedBoardId = boardService.save(board);

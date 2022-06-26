@@ -3,6 +3,7 @@ package com.my.blog.auth.service;
 import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.global.common.utils.StringUtil;
 import com.my.blog.global.jwt.TokenProvider;
+import com.my.blog.global.jwt.dto.AccessToken;
 import com.my.blog.global.jwt.dto.TokenDTO;
 import com.my.blog.global.security.CustomUserDetails;
 import com.my.blog.global.security.dto.LoginAuth;
@@ -15,13 +16,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Service
 public class AuthService {
     private final MemberRepository memberRepository;
     private final AuthenticationManager authenticationManager;
@@ -39,11 +42,11 @@ public class AuthService {
         return tokenProvider.generate(StringUtil.convertToStr(authenticate.getPrincipal(),""),roles);
     }
 
-    public TokenDTO reissue(final String refreshToken) {
+    public AccessToken issueAccessToken(final String refreshToken) {
         tokenProvider.validateToken(refreshToken);
         String email = tokenProvider.getIssuer(refreshToken);
         LoginAuth loginAuth = memberRepository.findByLoginEmail(Email.from(email)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
 
-        return tokenProvider.generate(email, List.of(loginAuth.getRoleType().name()));
+        return tokenProvider.generateAccessToken(email, List.of(loginAuth.getRoleType().name()));
     }
 }

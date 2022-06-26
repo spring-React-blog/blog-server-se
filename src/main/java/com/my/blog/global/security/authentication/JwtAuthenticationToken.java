@@ -8,6 +8,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private JwtAuthenticationToken(final String accessToken){
         super(null);
         this.accessToken = accessToken;
+
     }
 
     public static JwtAuthenticationToken from(final String accessToken){

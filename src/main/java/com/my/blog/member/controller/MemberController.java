@@ -23,18 +23,11 @@ public class MemberController {
     private MemberService memberService;
     private ModelMapper mapper;
 
-    @PostMapping("/members")
-    public ResponseEntity<MemberResponse> join(@RequestBody @Valid CreateRequest request){
+    @PostMapping("/public/members")
+    public ResponseEntity<MemberResponse> joinMember(@RequestBody @Valid CreateRequest request){
         Long saved = memberService.save(mapper.createMember(request));
         MemberResponse response = MemberResponse.builder().id(saved).build();
         return new ResponseEntity(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/members/{id}")
-    public ResponseEntity<MemberResponse> profile(@PathVariable Long id){
-        MemberDTO dto = memberService.findById(id);
-        MemberResponse content = mapper.getResponse(dto);
-        return new ResponseEntity<>(content,HttpStatus.OK);
     }
 
     @GetMapping("/public/members")
@@ -48,9 +41,22 @@ public class MemberController {
         MemberResponse response = mapper.getResponse(dto);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @GetMapping("/members/{id}")
+    public ResponseEntity<MemberResponse> profile(@PathVariable Long id){
+        MemberDTO dto = memberService.findById(id);
+        MemberResponse content = mapper.getResponse(dto);
+        return new ResponseEntity<>(content,HttpStatus.OK);
+    }
+
     @DeleteMapping("/members")
     public ResponseEntity<MemberResponse> delete(@PathVariable Long id){
-         memberService.deleteById(id);
+        memberService.deleteById(id);
         return new ResponseEntity<>( null,HttpStatus.OK);
     }
+
+
+
+
+
 }
