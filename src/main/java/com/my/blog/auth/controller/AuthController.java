@@ -13,44 +13,65 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
-@RestController
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RequiredArgsConstructor
+@RequestMapping("/api")
+@RestController
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/auth/join")
-    public ResponseEntity<AuthTokenResponse> join(@RequestBody LoginRequest request){
+    /**
+     * 로그인 요청
+     * @input  LoginRequest
+     * @output AuthTokenResponse(AccessToken, RefreshToken)
+     * */
+    @PostMapping("/public/auth/login")
+    public ResponseEntity<AuthTokenResponse> login(@RequestBody LoginRequest request, HttpServletResponse response){
         TokenDTO token = authService.login(request.getEmail(), request.getPassword());
 
-        AuthTokenResponse response = AuthTokenResponse.builder()
+        AuthTokenResponse tokenResponse = AuthTokenResponse.builder()
                 .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
                 .build();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        Cookie cookie = new Cookie("refreshToken", token.getRefreshToken().getToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+        return new ResponseEntity<>(tokenResponse,HttpStatus.OK);
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<AuthTokenResponse> login(@RequestBody LoginRequest request){
-        TokenDTO token = authService.login(request.getEmail(), request.getPassword());
+    /**
+     * AccessToken 재발행 요청
+     * @input  RefreshToken
+     * @output AccessToken
+     * */
+    @PostMapping("/public/auth/refresh")
+    public ResponseEntity<AuthTokenResponse> issueAccessToken(@RequestBody String refreshToken){
 
-        AuthTokenResponse response = AuthTokenResponse.builder()
-                .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
-                .build();
-
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
-
-    @PostMapping("/auth/reissue")
-    public ResponseEntity<AuthTokenResponse> reissue(@RequestBody String refreshToken){
-
-        AccessToken token = authService.reissue(refreshToken).getAccessToken();
+        //refresh token 도 만료되었을 경우 로그아웃
+        AccessToken token = authService.issueAccessToken(refreshToken);
         AuthTokenResponse response = AuthTokenResponse.builder().accessToken(token).build();
         return new ResponseEntity<>(response,HttpStatus.OK);
+
+    }
+
+    /**
+     * RefreshToken 삭제
+     * @input  RefreshToken
+     * @output null
+     * */
+    @PostMapping("/auth/logout")
+    public ResponseEntity<AuthTokenResponse> delete(@RequestBody String refreshToken, HttpServletResponse response){
+        Cookie cookie = new Cookie("refreshToken", "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);  
+        return new ResponseEntity<>(null,HttpStatus.OK);
 
     }
 }
