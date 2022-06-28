@@ -1,15 +1,15 @@
 package com.my.blog.security;
 
 import com.my.blog.member.entity.Member;
-import com.my.blog.member.vo.Email;
-import com.my.blog.member.vo.Password;
-import com.my.blog.member.vo.RoleType;
+import com.my.blog.member.entity.vo.Email;
+import com.my.blog.member.entity.vo.Password;
+import com.my.blog.member.entity.vo.RoleType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.sql.rowset.serial.SerialArray;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +28,9 @@ public class CustomUserDetails implements UserDetails , Serializable {
         this.password = member.getPassword();
         this.role = member.getRoleType();
     }
-
+    public static CustomUserDetails getPrincipal() {
+        return (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+role));
@@ -40,7 +42,7 @@ public class CustomUserDetails implements UserDetails , Serializable {
 
     @Override
     public String getPassword() {
-        return password.getPassword();
+        return password.password();
     }
 
     @Override

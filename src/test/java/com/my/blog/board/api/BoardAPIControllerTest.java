@@ -2,11 +2,11 @@ package com.my.blog.board.api;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.my.blog.board.domain.Status;
-import com.my.blog.board.domain.Content;
-import com.my.blog.board.domain.Title;
-import com.my.blog.board.vo.request.BoardRequest;
-import com.my.blog.board.vo.response.BoardResponse;
+import com.my.blog.board.domain.vo.Status;
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Title;
+import com.my.blog.board.dto.request.BoardRequest;
+import com.my.blog.board.dto.response.BoardResponse;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.common.response.ResponseEnvelope;

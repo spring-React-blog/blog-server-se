@@ -2,61 +2,48 @@ package com.my.blog.board.service;
 
 import com.my.blog.board.domain.Board;
 import com.my.blog.board.repository.BoardRepository;
-import com.my.blog.board.repository.BoardSearchRepository;
-import com.my.blog.board.vo.BoardSchCondition;
-import com.my.blog.board.vo.response.BoardResponse;
-import com.my.blog.common.errorcode.BoardErrorCode;
-import com.my.blog.common.errorcode.MemberErrorCode;
-import com.my.blog.common.exception.CommonException;
-import com.my.blog.count.entity.BoardCount;
+import com.my.blog.board.dto.BoardSchCondition;
+import com.my.blog.board.dto.response.BoardResponse;
+import com.my.blog.board.error.BoardErrorCode;
+import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.count.service.BoardCountService;
-import com.my.blog.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-
 @RequiredArgsConstructor
-@Service
 @Transactional
+@Service
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardCountService boardCountService;
 
-    @Transactional
-    public Long save(Board board){
+    public Long save(final Board board){
         Board savedBoard = boardRepository.save(board);
         return savedBoard.getId();
     }
 
-    @Transactional
-    public BoardResponse getBoard(Long id){
+    public Board getBoard(final Long id){
         Board board = boardRepository.findById(id).orElseThrow(() -> new CommonException(BoardErrorCode.BOARD_NOT_FOUND));
         boardCountService.increaseViewCount(board.getBoardCount().getId());
-        return BoardResponse.toResponse(board);
-    }
-    
-    public Page<BoardResponse> getBoards(BoardSchCondition condition, Pageable pageable){
-        return boardRepository.search(condition,pageable);
+        return board;
     }
 
-    public void updateBoard(final Board updateBoard, Long id, String memberId){
+    public void updateBoard(final Board updateBoard, final Long id, final String memberId){
         Board board = manipulableBoard(id, memberId);
         board.update(updateBoard);
     }
 
-    public void deleteBoard(Long id, String memberId){
+    public void deleteBoard(final Long id, final String memberId){
         manipulableBoard(id, memberId);
         boardRepository.deleteById(id);
     }
 
-    private Board manipulableBoard(Long id, String memberId) {
+    private Board manipulableBoard(final Long id, final String memberEmail) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new CommonException(BoardErrorCode.BOARD_NOT_FOUND));
-        if(!Objects.equals(board.getMember().getEmail().getEmail(), memberId)) throw new CommonException(BoardErrorCode.NOT_AUTHORIZED);
+        if(!board.emailEquals(memberEmail)) throw new CommonException(BoardErrorCode.NOT_AUTHORIZED);
         return board;
     }
 

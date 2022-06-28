@@ -1,14 +1,14 @@
 package com.my.blog.auth.service;
 
-import com.my.blog.common.errorcode.JWTErrorCode;
-import com.my.blog.common.errorcode.MemberErrorCode;
-import com.my.blog.common.exception.CommonException;
-import com.my.blog.jwt.TokenProvider;
-import com.my.blog.jwt.dto.AccessToken;
-import com.my.blog.jwt.dto.TokenDTO;
+import com.my.blog.global.jwt.error.JWTErrorCode;
+import com.my.blog.member.error.MemberErrorCode;
+import com.my.blog.global.common.exception.CommonException;
+import com.my.blog.global.jwt.TokenProvider;
+import com.my.blog.global.jwt.dto.AccessToken;
+import com.my.blog.global.jwt.dto.TokenDTO;
 import com.my.blog.member.repository.MemberRepository;
-import com.my.blog.member.vo.Email;
-import com.my.blog.member.vo.Password;
+import com.my.blog.member.entity.vo.Email;
+import com.my.blog.member.entity.vo.Password;
 import com.my.blog.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +30,7 @@ public class AuthService {
 
     public TokenDTO login(Email email, Password password){
         String usrEmail = email.getEmail();
-        String usrPwd = password.getPassword();
+        String usrPwd = password.password();
 
         CustomUserDetails userDetails = memberRepository.findByEmail(email)
                 .map(CustomUserDetails::new)

@@ -1,7 +1,10 @@
 package com.my.blog.board.domain;
 
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Status;
+import com.my.blog.board.domain.vo.Title;
 import com.my.blog.category.entity.Category;
-import com.my.blog.common.entity.BaseTimeEntity;
+import com.my.blog.global.common.entity.BaseTimeEntity;
 import com.my.blog.count.entity.BoardCount;
 import com.my.blog.member.entity.Member;
 import lombok.*;
@@ -59,11 +62,12 @@ public class Board extends BaseTimeEntity {
                         .build();
     }
 
-    public void updateBoardCount(BoardCount boardCount){
-        this.boardCount = boardCount;
+
+    public boolean emailEquals(String email){
+        return this.member.emailEquals(email);
     }
 
-    public void setMember(Member member){
+   public void setMember(Member member){
         this.member = member;
     }
 

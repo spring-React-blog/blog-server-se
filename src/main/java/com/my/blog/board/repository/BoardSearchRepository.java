@@ -1,7 +1,8 @@
 package com.my.blog.board.repository;
 
-import com.my.blog.board.vo.BoardSchCondition;
-import com.my.blog.board.vo.response.BoardResponse;
+import com.my.blog.board.domain.Board;
+import com.my.blog.board.dto.BoardSchCondition;
+import com.my.blog.board.dto.response.BoardResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
