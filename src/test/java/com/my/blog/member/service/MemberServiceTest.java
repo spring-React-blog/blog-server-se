@@ -14,6 +14,7 @@ import com.my.blog.member.entity.vo.NickName;
 import com.my.blog.member.entity.vo.Password;
 import com.my.blog.member.entity.vo.RoleType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
+@Disabled
 class MemberServiceTest {
 
     @Autowired

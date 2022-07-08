@@ -1,6 +1,5 @@
 package com.my.blog.member.repository;
 
-import com.my.blog.global.security.dto.LoginAuth;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.Email;
 import org.springframework.data.jpa.repository.JpaRepository;

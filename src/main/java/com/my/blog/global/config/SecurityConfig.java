@@ -30,7 +30,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig  {
-    private static final String PUBLIC = "/api/v1/public/**";
+    private static final String PUBLIC = "/api/public/**";
     private static final String DB = "/console/**";
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;

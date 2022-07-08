@@ -34,7 +34,7 @@ public class MemberRepositoryImpl implements MemberSearchRepository {
 
     @Override
     public Optional<LoginAuth> findByLoginEmail(Email email) {
-        return Optional.of(
+        return Optional.ofNullable(
                 queryFactory.select(
                     Projections.constructor(
                             LoginAuth.class,

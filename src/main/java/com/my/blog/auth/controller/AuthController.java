@@ -3,18 +3,12 @@ package com.my.blog.auth.controller;
 import com.my.blog.auth.service.AuthService;
 import com.my.blog.auth.vo.AuthTokenResponse;
 import com.my.blog.auth.vo.LoginRequest;
-import com.my.blog.global.common.response.ResponseEnvelope;
-import com.my.blog.global.common.response.ResponseHeader;
 import com.my.blog.global.jwt.dto.AccessToken;
 import com.my.blog.global.jwt.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -38,9 +32,7 @@ public class AuthController {
                 .accessToken(token.getAccessToken())
                 .build();
 
-        Cookie cookie = new Cookie("refreshToken", token.getRefreshToken().getToken());
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        Cookie cookie = getRefreshTokenCookie( token.getRefreshToken().getToken());
         response.addCookie(cookie);
         return new ResponseEntity<>(tokenResponse,HttpStatus.OK);
     }
@@ -51,8 +43,7 @@ public class AuthController {
      * @output AccessToken
      * */
     @PostMapping("/public/auth/refresh")
-    public ResponseEntity<AuthTokenResponse> issueAccessToken(@RequestBody String refreshToken){
-
+    public ResponseEntity<AuthTokenResponse> issueAccessToken(@CookieValue(name = "refreshToken")  String refreshToken){
         //refresh token 도 만료되었을 경우 로그아웃
         AccessToken token = authService.issueAccessToken(refreshToken);
         AuthTokenResponse response = AuthTokenResponse.builder().accessToken(token).build();
@@ -60,6 +51,12 @@ public class AuthController {
 
     }
 
+    private Cookie getRefreshTokenCookie(String refreshToken){
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        return cookie;
+    }
     /**
      * RefreshToken 삭제
      * @input  RefreshToken

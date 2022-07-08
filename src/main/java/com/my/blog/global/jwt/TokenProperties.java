@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -28,7 +29,7 @@ public class TokenProperties {
             ) {
         this.accessTokenValidityInSeconds = accessTokenValidityInSeconds * 1000;
         this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds * 1000;
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public Key getKey(){

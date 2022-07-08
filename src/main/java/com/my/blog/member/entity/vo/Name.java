@@ -2,6 +2,7 @@ package com.my.blog.member.entity.vo;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -15,6 +16,7 @@ public class Name {
 
     @NotBlank
     @Size(min=1,max=8,message = "3~8자 내로 입력해주세요.")
+    @Column(name="name")
     private String name;
 
     public static Name from(String name){

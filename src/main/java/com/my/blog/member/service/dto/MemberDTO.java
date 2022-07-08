@@ -1,6 +1,5 @@
 package com.my.blog.member.service.dto;
 
-import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.*;
 import lombok.*;
 

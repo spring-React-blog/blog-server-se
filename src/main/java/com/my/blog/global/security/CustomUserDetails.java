@@ -1,28 +1,18 @@
 package com.my.blog.global.security;
 
 import com.my.blog.global.security.dto.LoginAuth;
-import com.my.blog.member.entity.Member;
-import com.my.blog.member.entity.vo.Email;
-import com.my.blog.member.entity.vo.Password;
 import com.my.blog.member.entity.vo.RoleType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 public final class CustomUserDetails extends User  {
     private final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
-
-    private Email email;
-    private Password password;
-    private RoleType role;
 
     public static final String ROLE = "ROLE_";
     private CustomUserDetails(final LoginAuth loginAuth) {

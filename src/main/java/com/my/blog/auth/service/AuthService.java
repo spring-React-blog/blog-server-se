@@ -32,7 +32,7 @@ public class AuthService {
 
 
     public TokenDTO login(final Email email, final Password password){
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email.getEmail(), password.getPassword()));
 
         List<String> roles = authenticate.getAuthorities().stream()
                 .map(auth -> auth.getAuthority().replaceAll(CustomUserDetails.ROLE, ""))

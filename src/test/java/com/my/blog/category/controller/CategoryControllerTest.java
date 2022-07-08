@@ -2,6 +2,7 @@ package com.my.blog.category.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.my.blog.category.vo.CategoryRequest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @Rollback(value = false)
+@Disabled
 class CategoryControllerTest {
 
     @Autowired

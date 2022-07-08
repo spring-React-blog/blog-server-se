@@ -14,6 +14,7 @@ public class ModelMapper {
 
     public static MemberDTO createMember(CreateRequest request){
         return MemberDTO.builder()
+                .email(request.getEmail())
                 .nickname(request.getNickName())
                 .password(request.getPassword())
                 .name(request.getName())
