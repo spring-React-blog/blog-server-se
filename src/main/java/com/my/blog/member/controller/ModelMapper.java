@@ -12,15 +12,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModelMapper {
 
-    public MemberDTO createMember(CreateRequest request){
+    public static MemberDTO createMember(CreateRequest request){
         return MemberDTO.builder()
+                .email(request.getEmail())
                 .nickname(request.getNickName())
                 .password(request.getPassword())
                 .name(request.getName())
                 .build();
     }
 
-    public MemberDTO updateMember(UpdateRequest request){
+    public static MemberDTO updateMember(UpdateRequest request){
         return MemberDTO.builder()
                 .id(request.getId())
                 .nickname(request.getNickName())
@@ -29,7 +30,7 @@ public class ModelMapper {
                 .build();
     }
 
-    public MemberResponse getResponse(MemberDTO member){
+    public static MemberResponse getResponse(MemberDTO member){
         return MemberResponse.builder()
                 .id(member.getId())
                 .email(member.getEmail())

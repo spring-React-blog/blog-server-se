@@ -1,7 +1,6 @@
 package com.my.blog.member.dto;
 
 import com.my.blog.member.entity.vo.Email;
-import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.NickName;
 import lombok.*;

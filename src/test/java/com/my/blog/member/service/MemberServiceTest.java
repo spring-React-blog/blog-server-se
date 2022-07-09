@@ -14,6 +14,7 @@ import com.my.blog.member.entity.vo.NickName;
 import com.my.blog.member.entity.vo.Password;
 import com.my.blog.member.entity.vo.RoleType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
+@Disabled
 class MemberServiceTest {
 
     @Autowired
@@ -43,6 +45,7 @@ class MemberServiceTest {
 
     @Autowired
     ModelMapper mapper;
+
     @Autowired
     EntityMapper entityMapper;
 
@@ -102,6 +105,41 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("회원 수정")
+    public void update() {
+        UpdateRequest update = UpdateRequest.builder()
+                .id(1L)
+                .nickName(NickName.from("hohoho")).build();
+        MemberDTO memberDTO = mapper.updateMember(update);
+
+        MemberDTO before = memberService.findById(memberDTO.getId());
+        Password beforePassword = before.getPassword();
+
+        MemberDTO updated = memberService.update(memberDTO);
+        assertThat(updated.getName()).isEqualTo(Name.from("seungeun"));
+        assertThat(updated.getNickname()).isEqualTo(NickName.from("hohoho"));
+        assertThat(beforePassword).isEqualTo(updated.getPassword());
+    }
+
+    @Test
+    @DisplayName("비밀번호 수정")
+    public void updatePwd(){
+        UpdateRequest update = UpdateRequest.builder()
+                .id(1L)
+                .password(Password.from("q1w2e3r4")).build();
+        MemberDTO memberDTO = mapper.updateMember(update);
+
+        MemberDTO before = memberService.findById(memberDTO.getId());
+        Password beforePassword = before.getPassword();
+
+        MemberDTO updated = memberService.update(memberDTO);
+        assertThat(updated.getName()).isEqualTo(Name.from("seungeun"));
+        assertThat(updated.getNickname()).isEqualTo(NickName.from("hohoho"));
+        assertThat(beforePassword).isEqualTo(updated.getPassword());
+
+    }
+
+    @Test
+    @DisplayName("회원 수정")
     public void update(){
         UpdateRequest update = UpdateRequest.builder()
                 .id(1L)
@@ -130,6 +168,15 @@ class MemberServiceTest {
         MemberDTO updated = memberService.update(memberDTO);
         assertThat(updated.getNickname()).isEqualTo(NickName.from("dd"));
         assertThat(beforePassword).isNotEqualTo(updated.getPassword());
+    }
+
+    @Test
+    @DisplayName("회원 삭제")
+    public void delete(){
+        MemberDTO dto = memberService.findById(1L);
+        Member member = entityMapper.toEntity(dto);
+        memberService.deleteById(member.getId());
+        assertThrows( CommonException.class, ()-> memberService.findById(1L));
     }
 
     @Test

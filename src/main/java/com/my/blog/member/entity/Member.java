@@ -1,6 +1,7 @@
 package com.my.blog.member.entity;
 
 import com.my.blog.count.entity.MemberCount;
+import com.my.blog.global.common.entity.BaseTimeEntity;
 import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.*;
 import lombok.*;
@@ -8,38 +9,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 @NoArgsConstructor(access=AccessLevel.PROTECTED)
-@Table(name = "member")
+@Table(name = "members")
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="member_id")
     private Long id;
 
-    @Column(name="email")
     @Embedded
     private Email email;
 
-    @Column(name="password")
     @Embedded
     private Password password;
 
-    @Column(name="name")
     @Embedded
     private Name name;
 
-    @Column(name="nickname")
     @Embedded
     private NickName nickname;
 
-    @Column(name="birth")
     @Embedded
     private Birth birth;
 
@@ -51,12 +45,15 @@ public class Member {
     private LocalDateTime deleteTime;
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name="member_count_id")
+    @JoinColumn(name="membercount_id")
     private MemberCount memberCount;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="follower_id")
-    private List<Follower> follower;
+   /* @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "member_follower",
+            joinColumns = {@JoinColumn(name = "member_id")},
+            inverseJoinColumns = {@JoinColumn(name = "follower_id")})
+    private List<Follower> follower;*/
 
     @Builder
     public Member(

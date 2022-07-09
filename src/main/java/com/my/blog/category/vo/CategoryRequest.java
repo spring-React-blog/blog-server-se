@@ -1,11 +1,11 @@
 package com.my.blog.category.vo;
 
 import com.my.blog.category.entity.Category;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
-@Data
-@ToString
+@Builder
 public class CategoryRequest {
     private Long id;
     private String name;

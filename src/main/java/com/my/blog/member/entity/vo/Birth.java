@@ -2,6 +2,7 @@ package com.my.blog.member.entity.vo;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDate;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Birth {
 
+    @Column(name="birth")
     private LocalDate birth;
 
     public static Birth from(LocalDate birth){

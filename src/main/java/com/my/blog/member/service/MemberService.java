@@ -18,6 +18,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final EntityMapper mapper;
+
     public Long save(final MemberDTO memberDTO){
         Member member = mapper.toEntity(memberDTO);
         member.encode(member.getPassword(),passwordEncoder);

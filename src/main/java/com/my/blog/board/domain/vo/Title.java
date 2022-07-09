@@ -2,22 +2,24 @@ package com.my.blog.board.domain.vo;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Embeddable
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Getter
+@Embeddable
 public class Title {
 
     @NotBlank
     @Size(max=30,message = "30자 이하로 입력해주세요.")
+    @Column(name="title")
     private String title;
 
-    public static Title of(String title){
+    public static Title from(String title){
         return new Title(title);
     }
 

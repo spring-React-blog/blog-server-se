@@ -1,33 +1,55 @@
 package com.my.blog.board.service;
 
+import com.my.blog.board.domain.Board;
+import com.my.blog.board.domain.vo.Content;
+import com.my.blog.board.domain.vo.Status;
+import com.my.blog.board.domain.vo.Title;
+import com.my.blog.board.dto.BoardSchCondition;
+import com.my.blog.board.dto.request.BoardRequest;
+import com.my.blog.board.dto.response.BoardResponse;
+import com.my.blog.board.repository.BoardRepository;
 import com.my.blog.board.repository.BoardRepositoryImpl;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.category.vo.CategoryRequest;
-import com.my.blog.member.entity.vo.Name;
-import com.my.blog.member.service.MemberService;
-import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.controller.ModelMapper;
 import com.my.blog.member.dto.request.CreateRequest;
+import com.my.blog.member.entity.vo.Email;
+import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.Password;
-import org.junit.jupiter.api.*;
+import com.my.blog.member.service.MemberService;
+import com.my.blog.member.service.dto.EntityMapper;
+import com.my.blog.member.service.dto.MemberDTO;
+import org.aspectj.lang.annotation.After;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
-@Rollback(value = false)
+@Transactional
 class BoardServiceTest {
 
     @Autowired
-    BoardRepositoryImpl repository;
+    BoardService boardService;
 
     @Autowired
-    BoardService boardService;
+    BoardSearchService boardSearchService;
 
     @Autowired
     MemberService memberService;
@@ -36,101 +58,102 @@ class BoardServiceTest {
     CategoryService categoryService;
 
     @Autowired
-    EntityManager em;
+    BoardRepository boardRepository;
 
-    private Long memberId;
-    private Long categoryId;
+    @Autowired
+    EntityManager entityManager;
+
+
+    Long savedMemberId;
+    Long savedCategoryId;
+    Long savedBoardId;
 
     @BeforeEach
-    public void createMember(){
+    public void init(){
+        //회원 mock 정의
         CreateRequest request = CreateRequest.builder()
                 .email(Email.from("test@google.com"))
                 .password(Password.from("nono"))
                 .name(Name.from("이승은"))
                 .build();
+        MemberDTO member = ModelMapper.createMember(request);
+        savedMemberId = memberService.save(member);
 
-     //   this.memberId = memberService.save(ModelMapper.createMember(request));
-
-    }
-
-    @BeforeEach
-    public void createCategory(){
-        CategoryRequest categoryRequest = new CategoryRequest();
-        categoryRequest.setName("java");
+        //카테고리 mock 정의
+        CategoryRequest categoryRequest = CategoryRequest.builder().name("스프링").build();
         Category category = categoryRequest.toEntity();
+        savedCategoryId = categoryService.save(category);
 
-        this.categoryId = categoryService.save(category);
-    }
-
-
-   /* @Test
-    @Order(1)
-    public void create(){
-        BoardRequest req = new BoardRequest();
-        req.setTitle(Title.of("타이틀"));
-        req.setContent(Content.of("contet"));
-        req.setStatus(Status.TRUE);
-        req.setCategoryId(categoryId);
-        req.setMemberId(memberId);
+        //보드생성
+        BoardRequest req =  BoardRequest.builder()
+                .title(Title.from("tt"))
+                .content(Content.from("dd"))
+                .status(Status.TRUE)
+                .categoryId(savedCategoryId)
+                .memberId(savedMemberId)
+                .build();
 
         Board board = req.toEntity();
-        MemberResponse mem = memberService.findById(req.getMemberId());
+        MemberDTO memberDTO = memberService.findById(req.getMemberId());
 
+        board.setMember(EntityMapper.toEntity(memberDTO));
+        board.setCategory(category);
+
+        savedBoardId = boardService.save(board);
+
+    }
+    @AfterEach
+    public void teardown() {
+        boardRepository.deleteAll();
+        this.entityManager
+                .createNativeQuery("ALTER TABLE board AUTO_INCREMENT = 1")
+                .executeUpdate();
+    }
+    @Test
+    @DisplayName("보드 생성")
+    public void create(){
+        BoardRequest req =  BoardRequest.builder()
+                .title(Title.from("tt"))
+                .content(Content.from("dd"))
+                .status(Status.TRUE)
+                .categoryId(savedCategoryId)
+                .memberId(savedMemberId)
+                .build();
+
+
+        Board board = req.toEntity();
+        MemberDTO memberDTO = memberService.findById(req.getMemberId());
         Category category = categoryService.findById(req.getCategoryId());
 
-        Member member = Member.builder()
-                .nickName(mem.getNickName())
-                .name(mem.getName())
-                .email(mem.getEmail())
-                .build();
-        board.setMember(member);
+        board.setMember(EntityMapper.toEntity(memberDTO));
         board.setCategory(category);
 
         Long savedBoardId = boardService.save(board);
-        assertThat(savedBoardId).isEqualTo(1);
+        assertThat(savedBoardId).isEqualTo(2L);
     }
 
 
     @Test
-    @Order(2)
     @DisplayName("상세 보드")
     public void getBoard(){
-        BoardResponse board = boardService.getBoard(Long.valueOf(1));
+        Board board = boardService.getBoard(savedBoardId);
 
-        Long viewCount = board.getViewCount();
-        assertThat(board.getId()).isEqualTo(1);
-        assertThat(viewCount).isEqualTo(viewCount+1);
+        Long viewCount = board.getBoardCount().getViewCount();
+        assertThat(board.getId()).isEqualTo(1L);
+        assertThat(viewCount).isEqualTo(1);
 
     }
 
     @Test
-    @Order(3)
-    @DisplayName("레파지토리 리스트")
-    public void test(){
-        BoardSchCondition condition = new BoardSchCondition();
-        // condition.setCategory(category);
-        //  condition.setTitle(Title.of("타이틀"));
-
-        PageRequest pageable = PageRequest.of(0, 10);
-        List<BoardResponse> boardList = repository.getBoardList(condition, pageable);
-        System.out.println("전체 사이즈 > "+boardList.size());
-        for (BoardResponse b : boardList){
-            System.out.println("id > "+b.getId() + ", title  = " + b.title());
-        }
-    }
-
-    @Test
-    @Order(4)
     @DisplayName("전체 보드 리스트")
     public void getBoardList(){
-      //  Category category = categoryService.findById(categoryId);
-
-        BoardSchCondition condition = new BoardSchCondition();
-       // condition.setCategory(category);
-      //  condition.setTitle(Title.of("타이틀"));
+        BoardSchCondition condition =  BoardSchCondition.builder()
+                .title(Title.from("dd"))
+                .build()
+                ;
 
         PageRequest pageable = PageRequest.of(0, 10);
-        Page<BoardResponse> boards = boardService.getBoards(condition, pageable);
+        Page<BoardResponse> boards = boardSearchService.getBoards(condition, pageable);
 
         List<BoardResponse> content = boards.getContent();
         System.out.println("size==" + boards.getTotalElements() + " , " + content.size());
@@ -142,14 +165,5 @@ class BoardServiceTest {
         }
     }
 
-    @Test
-    @DisplayName("count")
-    public void count(){
-        BoardSchCondition condition = new BoardSchCondition();
-        JPAQuery<Long> query = repository.countQuery(condition);
-        Long count = query.fetchOne();
-        System.out.println("count  > "+count);
-        assertThat(count).isEqualTo(1);
-    }
-*/
+
 }

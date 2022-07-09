@@ -3,52 +3,72 @@ package com.my.blog.auth.controller;
 import com.my.blog.auth.service.AuthService;
 import com.my.blog.auth.vo.AuthTokenResponse;
 import com.my.blog.auth.vo.LoginRequest;
-import com.my.blog.global.common.response.ResponseEnvelope;
-import com.my.blog.global.common.response.ResponseHeader;
 import com.my.blog.global.jwt.dto.AccessToken;
 import com.my.blog.global.jwt.dto.TokenDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Slf4j
-@RestController
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RequiredArgsConstructor
+@RequestMapping("/api")
+@RestController
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/auth/join")
-    public ResponseEnvelope<AuthTokenResponse> join(@RequestBody LoginRequest request){
+    /**
+     * 로그인 요청
+     * @input  LoginRequest
+     * @output AuthTokenResponse(AccessToken, RefreshToken)
+     * */
+    @PostMapping("/public/auth/login")
+    public ResponseEntity<AuthTokenResponse> login(@RequestBody LoginRequest request, HttpServletResponse response){
         TokenDTO token = authService.login(request.getEmail(), request.getPassword());
 
-        AuthTokenResponse response = AuthTokenResponse.builder()
+        AuthTokenResponse tokenResponse = AuthTokenResponse.builder()
                 .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
                 .build();
 
-        return new ResponseEnvelope<>(ResponseHeader.ok(),response);
+        Cookie cookie = getRefreshTokenCookie( token.getRefreshToken().getToken());
+        response.addCookie(cookie);
+        return new ResponseEntity<>(tokenResponse,HttpStatus.OK);
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEnvelope<AuthTokenResponse> login(@RequestBody LoginRequest request){
-        TokenDTO token = authService.login(request.getEmail(), request.getPassword());
-
-        AuthTokenResponse response = AuthTokenResponse.builder()
-                .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
-                .build();
-
-        return new ResponseEnvelope<>(ResponseHeader.ok(),response);
-    }
-
-    @PostMapping("/auth/reissue")
-    public ResponseEnvelope<AuthTokenResponse> reissue(@RequestBody String refreshToken){
-
-        AccessToken token = authService.reissue(refreshToken);
+    /**
+     * AccessToken 재발행 요청
+     * @input  RefreshToken
+     * @output AccessToken
+     * */
+    @PostMapping("/public/auth/refresh")
+    public ResponseEntity<AuthTokenResponse> issueAccessToken(@CookieValue(name = "refreshToken")  String refreshToken){
+        //refresh token 도 만료되었을 경우 로그아웃
+        AccessToken token = authService.issueAccessToken(refreshToken);
         AuthTokenResponse response = AuthTokenResponse.builder().accessToken(token).build();
-        return new ResponseEnvelope<>(ResponseHeader.ok(),response);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+
+    }
+
+    private Cookie getRefreshTokenCookie(String refreshToken){
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        return cookie;
+    }
+    /**
+     * RefreshToken 삭제
+     * @input  RefreshToken
+     * @output null
+     * */
+    @PostMapping("/auth/logout")
+    public ResponseEntity<AuthTokenResponse> delete(@RequestBody String refreshToken, HttpServletResponse response){
+        Cookie cookie = new Cookie("refreshToken", "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);  
+        return new ResponseEntity<>(null,HttpStatus.OK);
 
     }
 }

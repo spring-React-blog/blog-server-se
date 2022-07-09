@@ -4,10 +4,15 @@ import com.my.blog.global.jwt.TokenProvider;
 import com.my.blog.global.jwt.handler.JwtAccessDeniedHandler;
 import com.my.blog.global.jwt.handler.JwtAuthenticateFilter;
 import com.my.blog.global.jwt.handler.JwtAuthenticationEntryPoint;
+import com.my.blog.global.security.provider.JwtAuthenticationProvider;
+import com.my.blog.global.security.provider.LoginAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -22,15 +27,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig  {
-    private static final String PUBLIC = "/api/v1/public/**";
+    private static final String PUBLIC = "/api/public/**";
     private static final String DB = "/console/**";
 
-    @Autowired
-    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final LoginAuthenticationProvider loginAuthenticationProvider;
+    private final JwtAuthenticationProvider jwtAuthorizationProvider;
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        authenticationManagerBuilder.authenticationProvider(loginAuthenticationProvider);
+        authenticationManagerBuilder.authenticationProvider(jwtAuthorizationProvider);
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,7 +56,7 @@ public class SecurityConfig  {
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // 인증, 허가 에러 시 공통적으로 처리해주는 부분이다.
                 .accessDeniedHandler(new JwtAccessDeniedHandler())
                 .and()
-                .addFilterBefore(new JwtAuthenticateFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticateFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //JWT를 쓰려면 Spring Security에서 기본적으로 지원하는 Session 설정을 해제해야 한다.
 
@@ -75,11 +88,6 @@ public class SecurityConfig  {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web -> web.ignoring().antMatchers("/js/**", "/favicon.ico/**", "/css/**", "/","/console/");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }

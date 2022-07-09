@@ -1,8 +1,10 @@
 package com.my.blog.member.repository;
 
+import com.my.blog.global.security.dto.LoginAuth;
 import com.my.blog.member.dto.MemberResponse;
 import com.my.blog.member.dto.MemberSchCondition;
 import com.my.blog.member.entity.Member;
+import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.NickName;
 import com.my.blog.member.entity.vo.RoleType;
@@ -21,6 +23,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.my.blog.member.entity.QMember.member;
 
@@ -28,6 +31,22 @@ import static com.my.blog.member.entity.QMember.member;
 public class MemberRepositoryImpl implements MemberSearchRepository {
 
     private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Optional<LoginAuth> findByLoginEmail(Email email) {
+        return Optional.ofNullable(
+                queryFactory.select(
+                    Projections.constructor(
+                            LoginAuth.class,
+                            member.email,
+                            member.password,
+                            member.roleType
+                    )
+                ).from(member)
+                .where(emailEq(email))
+                .fetchOne()
+        );
+    }
 
     @Override
     public Page<MemberResponse> search(MemberSchCondition condition, Pageable pageable) {
@@ -95,6 +114,10 @@ public class MemberRepositoryImpl implements MemberSearchRepository {
 
     private BooleanExpression idEq(final Long id) {
         return id!=null ? member.id.eq(id) : null;
+    }
+
+    private BooleanExpression emailEq(final Email email) {
+        return Objects.nonNull(email) ? member.email.eq(email) : null;
     }
 
 }

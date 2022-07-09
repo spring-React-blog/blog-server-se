@@ -11,22 +11,22 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name="board")
+@Entity
 public class Board extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="board_id")
     private Long id;
 
-    @Column(name="title")
+    @Embedded
     private Title title;
 
-    @Column(name="content")
+    @Embedded
     private Content content;
 
     @Column(name="open_status")

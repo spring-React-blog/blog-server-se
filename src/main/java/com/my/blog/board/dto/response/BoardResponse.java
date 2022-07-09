@@ -3,9 +3,6 @@ package com.my.blog.board.dto.response;
 import com.my.blog.board.domain.Board;
 import com.my.blog.board.domain.vo.Content;
 import com.my.blog.board.domain.vo.Title;
-import com.my.blog.category.entity.Category;
-import com.my.blog.count.entity.BoardCount;
-import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.Email;
 import lombok.*;
 

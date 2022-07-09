@@ -1,5 +1,6 @@
 package com.my.blog.count.entity;
 
+import com.my.blog.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 public class MemberCount {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_count_id")
+    @Column(name="membercount_id")
     private Long id;
 
     @Column(name="follower_count")
@@ -24,4 +25,7 @@ public class MemberCount {
 
     @Column(name="board_count")
     private int boardCount;
+
+    @OneToOne(mappedBy = "memberCount")
+    private Member member;
 }

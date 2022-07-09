@@ -7,6 +7,8 @@ import com.my.blog.category.vo.CategoryResponse;
 import com.my.blog.global.common.response.ResponseEnvelope;
 import com.my.blog.global.common.response.ResponseHeader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,21 +19,16 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/category")
-    public ResponseEnvelope<CategoryResponse> createCategory(@RequestBody CategoryRequest request)
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest request)
     {
         Category category = request.toEntity();
         Long id = categoryService.save(category);
-
-        ResponseHeader header = ResponseHeader.builder()
-                .code("200")
-                .message("success")
-                .build();
 
         CategoryResponse body =  CategoryResponse.builder()
                 .id(id)
                 .build();
 
-        return new ResponseEnvelope(header,body);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
 }

@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Followers")
+@Table(name = "followers")
 @Entity
 public class Follower {
 
@@ -21,5 +21,8 @@ public class Follower {
 
     @Column(name="to_member_id")
     private Long toMemberId;
+
+
+
 
 }
