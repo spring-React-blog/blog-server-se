@@ -1,4 +1,4 @@
-package com.my.blog.config;
+package com.my.blog.support.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;

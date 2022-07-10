@@ -2,7 +2,7 @@ package com.my.blog.auth.controller;
 
 import com.my.blog.auth.service.AuthService;
 import com.my.blog.auth.vo.LoginRequest;
-import com.my.blog.config.RestDocsTestSupport;
+import com.my.blog.support.controller.RestDocsTestSupport;
 import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.global.jwt.TokenProvider;
 import com.my.blog.global.jwt.dto.TokenDTO;
@@ -12,7 +12,6 @@ import com.my.blog.member.dto.request.CreateRequest;
 import com.my.blog.member.entity.vo.*;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.member.service.dto.MemberDTO;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 class AuthControllerTest extends RestDocsTestSupport {
 

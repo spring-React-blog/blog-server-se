@@ -33,11 +33,6 @@ public class MemberController {
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
 
-    @GetMapping("/public/members")
-    public ResponseEnvelope<MemberResponse> memberList(@RequestBody MemberSchCondition condition){
-        return new ResponseEnvelope<>(ResponseHeader.ok(),null);
-    }
-
     @PutMapping("/members")
     public ResponseEntity<MemberResponse> update(@RequestBody @Valid UpdateRequest request){
         MemberDTO dto = memberService.update(mapper.updateMember(request));

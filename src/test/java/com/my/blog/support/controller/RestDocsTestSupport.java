@@ -1,6 +1,7 @@
-package com.my.blog.config;
+package com.my.blog.support.controller;
 
 
+import com.my.blog.config.RestDocsConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;

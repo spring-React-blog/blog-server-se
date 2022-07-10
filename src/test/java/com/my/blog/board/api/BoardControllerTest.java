@@ -7,7 +7,7 @@ import com.my.blog.board.dto.request.BoardRequest;
 import com.my.blog.board.service.BoardService;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
-import com.my.blog.config.RestDocsTestSupport;
+import com.my.blog.support.controller.RestDocsTestSupport;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.*;
 import com.my.blog.member.service.MemberService;
