@@ -1,5 +1,6 @@
 package com.my.blog.member.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +25,7 @@ public class Password {
     @Column(name="password")
     private String password;
 
+    @JsonValue
     public String password(){
         return this.password;
     }

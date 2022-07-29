@@ -1,15 +1,13 @@
 package com.my.blog.global.config;
 
-import com.my.blog.global.jwt.TokenProvider;
+import com.my.blog.global.common.exception.FilterExceptionHandler;
 import com.my.blog.global.jwt.handler.JwtAccessDeniedHandler;
 import com.my.blog.global.jwt.handler.JwtAuthenticateFilter;
 import com.my.blog.global.jwt.handler.JwtAuthenticationEntryPoint;
 import com.my.blog.global.security.provider.JwtAuthenticationProvider;
 import com.my.blog.global.security.provider.LoginAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -17,8 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,6 +34,18 @@ public class SecurityConfig  {
     private final LoginAuthenticationProvider loginAuthenticationProvider;
     private final JwtAuthenticationProvider jwtAuthorizationProvider;
 
+    private JwtAuthenticateFilter jwtAuthenticateFilter;
+    private FilterExceptionHandler filterExceptionHandler;
+
+   @Bean
+    public FilterExceptionHandler filterExceptionHandler(){
+        return new FilterExceptionHandler();
+    }
+    @Bean
+    public JwtAuthenticateFilter jwtAuthenticateFilter() throws Exception {
+        return new JwtAuthenticateFilter(authenticationManager());
+    }
+
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         authenticationManagerBuilder.authenticationProvider(loginAuthenticationProvider);
@@ -56,7 +64,8 @@ public class SecurityConfig  {
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // 인증, 허가 에러 시 공통적으로 처리해주는 부분이다.
                 .accessDeniedHandler(new JwtAccessDeniedHandler())
                 .and()
-                .addFilterBefore(new JwtAuthenticateFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticateFilter(), UsernamePasswordAuthenticationFilter.class )
+                .addFilterBefore(filterExceptionHandler() , JwtAuthenticateFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //JWT를 쓰려면 Spring Security에서 기본적으로 지원하는 Session 설정을 해제해야 한다.
 

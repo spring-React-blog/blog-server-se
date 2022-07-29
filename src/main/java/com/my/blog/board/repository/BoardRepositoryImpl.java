@@ -1,6 +1,7 @@
 package com.my.blog.board.repository;
 
 import com.my.blog.board.domain.Board;
+import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.dto.BoardSchCondition;
 import com.my.blog.board.dto.response.BoardResponse;
 import com.querydsl.core.types.Order;
@@ -36,6 +37,27 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
         return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
     }
 
+    /*public List<BoardResponse> getBoard(Long id){
+        return queryFactory
+                .select(Projections.constructor(
+                        BoardResponse.class,
+                        board.id,
+                        board.title,
+                        board.content,
+                        board.category.name,
+                        board.member.email,
+                        board.boardCount.viewCount,
+                        //board.boardImages
+                ))
+                .from(board)
+                .leftJoin(board.category, category)
+                //   .leftJoin(board.boardImages, boardImage)
+                .innerJoin(board.boardCount, boardCount)
+                .innerJoin(board.member, member)
+                .where(boardIdEq(id))
+                .fetch();
+    }*/
+
     public List<BoardResponse> getBoardList(final BoardSchCondition condition,final Pageable pageable){
         return queryFactory
                 .select(Projections.constructor(
@@ -46,15 +68,18 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                         board.category.name,
                         board.member.email,
                         board.boardCount.viewCount
+                        //board.boardImages
                 ))
                 .from(board)
                 .leftJoin(board.category, category)
+             //   .leftJoin(board.boardImages, boardImage)
                 .innerJoin(board.boardCount, boardCount)
                 .innerJoin(board.member, member)
                 .where(boardIdEq(condition.getBoardId()),
                         titleContains(condition.title()),
                         contentContains(condition.content()),
-                        emailContains(condition.memberEmail())
+                        emailContains(condition.memberEmail()),
+                        notDeleted()
                 )
                 .orderBy(orderCondition(pageable))
                 .offset(pageable.getOffset())
@@ -71,7 +96,8 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                         boardIdEq(condition.getBoardId()),
                         titleContains(condition.title()),
                         contentContains(condition.content()),
-                        emailContains(condition.memberEmail())
+                        emailContains(condition.memberEmail()),
+                        notDeleted()
                 );
     }
 
@@ -82,6 +108,11 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                     pathBuilder.get(o.getProperty()));
         }
         return new OrderSpecifier(Order.DESC, board.createdDate);
+    }
+
+
+    private BooleanExpression notDeleted(){
+        return board.status.ne(Status.DELETED) ;
     }
 
     private BooleanExpression titleContains(final String title){

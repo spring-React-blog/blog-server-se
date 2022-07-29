@@ -1,0 +1,49 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+
+= RESTful Notes API Guide
+Baeldung;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[Auth]]
+
+== 로그인
+=== request
+include::{snippets}/auth-controller-test/login/http-request.adoc[]
+
+==== request-header
+include::{snippets}/auth-controller-test/login/request-headers.adoc[]
+
+==== request-fields
+include::{snippets}/auth-controller-test/login/request-fields.adoc[]
+
+=== response
+include::{snippets}/auth-controller-test/login/http-response.adoc[]
+
+==== response-header
+include::{snippets}/auth-controller-test/login/response-headers.adoc[]
+
+==== response-fields
+include::{snippets}/auth-controller-test/login/response-fields.adoc[]
+
+
+== 토큰 발급 요청
+=== request
+include::{snippets}/auth-controller-test/refresh/http-request.adoc[]
+
+=== request body
+
+include::{snippets}/auth-controller-test/refresh/request-body.adoc[]
+
+=== response body
+
+include::{snippets}/auth-controller-test/refresh/response-body.adoc[]
+
+
+

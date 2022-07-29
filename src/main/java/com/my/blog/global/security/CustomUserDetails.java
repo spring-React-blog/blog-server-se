@@ -15,6 +15,7 @@ public final class CustomUserDetails extends User  {
     private final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     public static final String ROLE = "ROLE_";
+
     private CustomUserDetails(final LoginAuth loginAuth) {
         super(loginAuth.getEmail().getEmail(), loginAuth.getPassword().password(), getAuthorities(loginAuth.getRoleType()));
     }

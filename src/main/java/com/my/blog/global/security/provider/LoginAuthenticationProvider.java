@@ -2,6 +2,7 @@ package com.my.blog.global.security.provider;
 
 import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.global.common.utils.StringUtil;
+import com.my.blog.global.security.CustomUserDetails;
 import com.my.blog.global.security.CustomUserDetailsService;
 import com.my.blog.member.error.MemberErrorCode;
 import lombok.RequiredArgsConstructor;

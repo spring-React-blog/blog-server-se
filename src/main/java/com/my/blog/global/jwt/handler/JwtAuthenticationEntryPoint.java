@@ -24,11 +24,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         String exception = (String)request.getAttribute("exception");
         ErrorCode errorCode;
 
-        log.debug("log: exception: {} ", exception);
+        log.info("log: exception: {} ", exception);
+        log.info("log: authException: {} ", authException);
+        log.info("log: authException.getMessage: {} ", authException.getMessage());
 
-        if(exception == null) {
+       if(exception == null) {
             errorCode = MemberErrorCode.NON_LOGIN;
-            setResponse(response, errorCode);
+            setResponse(response,  errorCode);
             return;
         }
 

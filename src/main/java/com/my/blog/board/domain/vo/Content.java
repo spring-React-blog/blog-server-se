@@ -1,5 +1,6 @@
 package com.my.blog.board.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -18,6 +19,11 @@ public class Content {
     @Size(max=500,message = "500자 이하로 입력해주세요.")
     @Column(name="content")
     private String content;
+
+    @JsonValue
+    public String content() {
+        return content;
+    }
 
     public static Content from(String content){
         return new Content(content);

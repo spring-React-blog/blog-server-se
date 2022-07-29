@@ -22,6 +22,7 @@ public class BoardResponse {
     public String title(){
         return this.title.getTitle();
     }
+
     public static BoardResponse toResponse(Board board){
         return BoardResponse.builder()
                 .id(board.getId())

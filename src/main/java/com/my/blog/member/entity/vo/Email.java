@@ -1,5 +1,6 @@
 package com.my.blog.member.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -17,6 +18,11 @@ public class Email {
     @javax.validation.constraints.Email
     @Column(name="email")
     private String email;
+
+    @JsonValue
+    public String email() {
+        return email;
+    }
 
     public static Email from(String email) {
         return new Email(email);

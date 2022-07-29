@@ -27,7 +27,7 @@ public class BoardCount {
     @Column
     private int replyCount;
 
-    @OneToOne(mappedBy = "boardCount")
+    @OneToOne(mappedBy = "boardCount", fetch = FetchType.LAZY)
     private Board board;
 
     @Builder

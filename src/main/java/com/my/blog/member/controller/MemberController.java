@@ -18,8 +18,8 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class MemberController {
-    private MemberService memberService;
-    private ModelMapper mapper;
+    private final MemberService memberService;
+    private final ModelMapper mapper;
 
     @PostMapping("/public/members")
     public ResponseEntity<MemberResponse> joinMember(@RequestBody @Valid CreateRequest request){

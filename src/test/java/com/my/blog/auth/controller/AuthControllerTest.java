@@ -13,6 +13,7 @@ import com.my.blog.member.entity.vo.*;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.member.service.dto.MemberDTO;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -63,39 +64,50 @@ class AuthControllerTest extends RestDocsTestSupport {
         given(memberService.findById(1L)).willReturn(memberDTO);
 
     }
-    @Test
-    @DisplayName("로그인")
-    public void login() throws Exception {
-        Email email = Email.from("dd@gmail.com");
-        Password password = Password.from("passwordDecoded");
-        LoginRequest loginRequest = LoginRequest.builder()
-                .email(email)
-                .password(password)
-                .build();
-        TokenDTO tokenDTO = tokenProvider.generate(email.getEmail(), List.of(RoleType.USER.name()));
-        given(authService.login(email,password)).willReturn(tokenDTO);
 
-        mockMvc.perform(post("/api/public/auth/login")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken.token").value(tokenDTO.getAccessToken().getToken()))
-                .andExpect(cookie().value("refreshToken",tokenDTO.getRefreshToken().getToken()))
-                .andDo(restDocs.document(
-                        requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON)),
-                        requestFields(
-                                fieldWithPath("email.email").description("이메일").type(JsonFieldType.STRING),
-                                fieldWithPath("password.password").description("비밀번호").type(JsonFieldType.STRING)
-                        ),
-                        responseHeaders(
-                                headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON),
-                                headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰")
-                        ),
-                        responseFields(
-                                fieldWithPath("accessToken.token").description("액세스토큰").type(JsonFieldType.STRING)
-                        )
-                        )
-                );
+    @Nested
+    class Login{
+        @Test
+        @DisplayName("로그인")
+        public void login() throws Exception {
+            Email email = Email.from("dd@gmail.com");
+            Password password = Password.from("passwordDecoded");
+            LoginRequest loginRequest = LoginRequest.builder()
+                    .email(email)
+                    .password(password)
+                    .build();
+            TokenDTO tokenDTO = tokenProvider.generate(email.getEmail(), List.of(RoleType.USER.name()));
+            given(authService.login(email,password)).willReturn(tokenDTO);
+
+            mockMvc.perform(post("/api/public/auth/login")
+                            .contentType(APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(loginRequest)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.accessToken").value(tokenDTO.getAccessToken().getToken()))
+                    .andExpect(cookie().value("refreshToken",tokenDTO.getRefreshToken().getToken()))
+                    .andDo(restDocs.document(
+                                    requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON)),
+                                    requestFields(
+                                            fieldWithPath("email").description("이메일").type(JsonFieldType.STRING),
+                                            fieldWithPath("password").description("비밀번호").type(JsonFieldType.STRING)
+                                    ),
+                                    responseHeaders(
+                                            headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON),
+                                            headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("accessToken").description("액세스토큰").type(JsonFieldType.STRING)
+                                    )
+                            )
+                    );
+        }
+
+        @Test
+        @DisplayName("잘못된 로그인 정보")
+        public void noMember(){
+
+        }
+
     }
 
     @Test
@@ -110,7 +122,7 @@ class AuthControllerTest extends RestDocsTestSupport {
         mockMvc.perform(post("/api/public/auth/refresh")
                         .cookie(cookie)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken.token").value(tokenDTO.getAccessToken().getToken()));
+                .andExpect(jsonPath("$.accessToken").value(tokenDTO.getAccessToken().getToken()));
 
     }
 
@@ -128,8 +140,7 @@ class AuthControllerTest extends RestDocsTestSupport {
         mockMvc.perform(post("/api/public/auth/refresh")
                         .cookie(cookie)
                 ).
-                andExpect(status().isGone())
-                .andExpect(jsonPath("$.body").value(null))
+                andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message").value(exception.getMessage()));
 
 

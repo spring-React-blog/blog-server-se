@@ -2,6 +2,7 @@ package com.my.blog.member.service;
 
 import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.member.entity.Member;
+import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.service.dto.EntityMapper;
 import com.my.blog.member.service.dto.MemberDTO;
 import com.my.blog.member.error.MemberErrorCode;
@@ -48,6 +49,13 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberDTO findById(final Long id){
         Member member = memberRepository.findById(id).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
+        if(member.hasDeleted()) throw new CommonException(MemberErrorCode.USER_HAS_DELETED);
+        return mapper.toDTO(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDTO findByEmail(final String email){
+        Member member = memberRepository.findByEmail(Email.from(email)).orElseThrow(() -> new CommonException(MemberErrorCode.USER_NOT_FOUND));
         if(member.hasDeleted()) throw new CommonException(MemberErrorCode.USER_HAS_DELETED);
         return mapper.toDTO(member);
     }

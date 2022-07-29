@@ -28,7 +28,6 @@ public class BoardCountService {
         BoardCount boardCount = getBoarCount.updateViewCount(getBoarCount.getViewCount() + 1);
 
         BoardCount save = boardCountRepository.save(boardCount);
-        System.out.println("count service "+save.getViewCount());
         return save;
     }
 

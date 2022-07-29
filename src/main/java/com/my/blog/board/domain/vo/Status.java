@@ -1,7 +1,7 @@
 package com.my.blog.board.domain.vo;
 
 public enum Status {
-    TRUE("공개"),FALSE("비공개");
+    TRUE("공개"),FALSE("비공개"), DELETED("삭제");
 
     private String status_desc;
 
