@@ -1,6 +1,7 @@
 package com.my.blog.category.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +20,10 @@ public class Category {
 
     @Column(name="category_name")
     private String name;
+    @JsonValue
+    public String name() {
+        return name;
+    }
 
 
 

@@ -8,7 +8,6 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 
 @Getter
-@EqualsAndHashCode
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor(access= AccessLevel.PRIVATE)
 @Embeddable
@@ -26,5 +25,11 @@ public class Email {
 
     public static Email from(String email) {
         return new Email(email);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Email e = (Email) obj;
+        return this.email.equals(e.email());
     }
 }

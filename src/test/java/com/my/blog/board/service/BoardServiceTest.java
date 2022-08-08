@@ -5,42 +5,21 @@ import com.my.blog.board.domain.vo.Content;
 import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.domain.vo.Title;
 import com.my.blog.board.dto.BoardSchCondition;
-import com.my.blog.board.dto.request.BoardRequest;
 import com.my.blog.board.dto.response.BoardResponse;
 import com.my.blog.board.repository.BoardRepository;
-import com.my.blog.board.repository.BoardRepositoryImpl;
-import com.my.blog.category.entity.Category;
-import com.my.blog.category.service.CategoryService;
-import com.my.blog.category.vo.CategoryRequest;
 import com.my.blog.count.entity.BoardCount;
 import com.my.blog.count.entity.BoardCountRepository;
 import com.my.blog.count.service.BoardCountService;
-import com.my.blog.member.controller.ModelMapper;
-import com.my.blog.member.dto.request.CreateRequest;
-import com.my.blog.member.entity.Member;
-import com.my.blog.member.entity.vo.*;
-import com.my.blog.member.repository.MemberRepository;
-import com.my.blog.member.service.MemberService;
-import com.my.blog.member.service.dto.EntityMapper;
-import com.my.blog.member.service.dto.MemberDTO;
+import com.my.blog.member.entity.vo.Email;
 import com.my.blog.support.service.UnitTest;
-import org.aspectj.lang.annotation.After;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,46 +29,33 @@ import static org.mockito.BDDMockito.given;
 @UnitTest
 class BoardServiceTest {
 
-    BoardService boardService;
-    BoardSearchService boardSearchService;
+    private BoardService boardService;
+    private BoardSearchService boardSearchService;
   //  BoardCacheService boardCacheService;
-    BoardCountService boardCountService;
-    @Mock
-    MemberRepository memberRepository;
-
-    @Mock
-    EntityMapper mapper;
-
-    @Mock
-    MemberService memberService;
-
-    @Mock
-    CategoryService categoryService;
+    private BoardCountService boardCountService;
 
     @Mock
     BoardRepository boardRepository;
 
     @Mock
     BoardCountRepository boardCountRepository;
-    Long savedMemberId;
-    Long savedCategoryId;
-    Long savedBoardId;
 
     @BeforeEach
     public void setUp(){
         //this.boardCacheService = new BoardCacheService();
         this.boardCountService = new BoardCountService(boardCountRepository);
         this.boardService = new BoardService(boardRepository, boardCountService);
+        this.boardSearchService = new BoardSearchService(boardRepository);
     }
 
-    @AfterEach
+   /* @AfterEach
     public void teardown() {
         boardRepository.deleteAll();
-     /*   this.entityManager
+        this.entityManager
                 .createNativeQuery("ALTER TABLE board AUTO_INCREMENT = 1")
-                .executeUpdate();*/
+                .executeUpdate();
     }
-
+*/
     @Test
     @DisplayName("상세 보드")
     public void getBoard(){
@@ -99,6 +65,7 @@ class BoardServiceTest {
                 .viewCount(0L)
                 .build();
         Board given = Board.builder()
+                .id(1L)
                 .content(Content.from("ff"))
                 .title(Title.from("dd"))
                 .status(Status.TRUE)
@@ -121,22 +88,33 @@ class BoardServiceTest {
     @Test
     @DisplayName("전체 보드 리스트")
     public void getBoardList(){
+        //given
         BoardSchCondition condition =  BoardSchCondition.builder()
-                .title(Title.from("dd"))
+                .title(Title.from("welcome"))
                 .build()
                 ;
-
         PageRequest pageable = PageRequest.of(0, 10);
+
+        BoardResponse boardResponse = BoardResponse.builder().id(1L)
+                .title(Title.from("welcome"))
+                .content(Content.from("hello world"))
+                .categoryName("spring")
+                .email(Email.from("seung90@gmail.com"))
+                .viewCount(0)
+                .build();
+        Page<BoardResponse> responses = new PageImpl<>(List.of(boardResponse));
+        given(boardRepository.search(condition,pageable)).willReturn(responses);
+
+        //when
         Page<BoardResponse> boards = boardSearchService.getBoards(condition, pageable);
 
+
+        //then
         List<BoardResponse> content = boards.getContent();
-        System.out.println("size==" + boards.getTotalElements() + " , " + content.size());
+        int totalPages = boards.getTotalPages();
 
-        for (BoardResponse res: content
-             ) {
-            System.out.println("BoardResponse > "+ res.getId() + ", title=" + res.title());
-
-        }
+        assertThat(content.size()).isEqualTo(1);
+        assertThat(totalPages).isEqualTo(1);
     }
 
 

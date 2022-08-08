@@ -7,6 +7,7 @@ import com.my.blog.category.entity.Category;
 import com.my.blog.count.entity.BoardCount;
 import com.my.blog.global.common.entity.BaseTimeEntity;
 import com.my.blog.member.entity.Member;
+import com.my.blog.member.entity.vo.Email;
 import com.my.blog.reply.domain.Reply;
 import lombok.*;
 
@@ -44,9 +45,11 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "count_id")
     private BoardCount boardCount;
 
+    @Builder.Default
     @OneToMany(mappedBy="board", cascade= CascadeType.ALL)
     private List<BoardImage> boardImages = new ArrayList();
 
+    @Builder.Default
     @OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList();
 
@@ -72,7 +75,7 @@ public class Board extends BaseTimeEntity {
     }
 
     public boolean emailEquals(String email){
-        return this.member.emailEquals(email);
+        return this.member.emailEquals(Email.from(email));
     }
 
     public void setMember(Member member){
@@ -83,9 +86,12 @@ public class Board extends BaseTimeEntity {
         this.category = category;
     }
 
-    public void update(Board updateBoard) {
+    public Board update(Board updateBoard) {
         this.title = updateBoard.getTitle();
         this.content = updateBoard.getContent();
+        this.status = updateBoard.getStatus();
+        this.category = updateBoard.getCategory();
+        return this;
     }
 
     public void addImage(final BoardImage image){

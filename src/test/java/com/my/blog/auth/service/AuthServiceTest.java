@@ -27,20 +27,20 @@ import static org.mockito.BDDMockito.given;
 
 @UnitTest
 class AuthServiceTest {
-
     @Mock
     AuthenticationManager authenticationManager;
-
     @Mock
     MemberRepository memberRepository;
 
     private TokenProvider tokenProvider;
     private AuthService authService;
     private TokenProperties tokenProperties;
+    private Email email = Email.from("seung90@gmail.com");
+    private Password pwd = Password.from("q1w2e3r4!");
     @BeforeEach
     public void init(){
         String secret = "jwtproviderSecretkey-test-authServicetest-jwtproviderSecretkey-test-authServicetest-jwtproviderSecretkey-test-authServicetest";
-        this.tokenProperties = new TokenProperties(secret,1L,2L);
+        this.tokenProperties = new TokenProperties(secret,3000,3000);
         this.tokenProvider = new TokenProvider(tokenProperties);
         this.authService = new AuthService(memberRepository,authenticationManager,tokenProvider);
     }
@@ -49,8 +49,7 @@ class AuthServiceTest {
     @DisplayName("로그인")
     public void login(){
         //given
-        Email email = Email.from("ssseung@gmail.com");
-        Password pwd = Password.from("q1w2e3r4!");
+
         UsernamePasswordAuthenticationToken loginToken = new UsernamePasswordAuthenticationToken(email.getEmail(), pwd.getPassword());
         Authentication authentication = new UsernamePasswordAuthenticationToken(email.getEmail(), null, CustomUserDetails.getAuthorities(RoleType.USER));
 
@@ -70,8 +69,6 @@ class AuthServiceTest {
     @DisplayName("액세스 토큰 재발행")
     public void issueAccessToken(){
         //given
-        Email email = Email.from("ssseung@gmail.com");
-        Password pwd = Password.from("q1w2e3r4!");
         TokenDTO generated = tokenProvider.generate(email.getEmail(), List.of(RoleType.USER.name()));
         String refresh = generated.getRefreshToken().getToken();
         LoginAuth loginAuth = LoginAuth.builder()

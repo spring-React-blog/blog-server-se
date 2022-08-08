@@ -1,7 +1,9 @@
 package com.my.blog.category.service;
 
 import com.my.blog.category.entity.Category;
+import com.my.blog.category.error.CategoryError;
 import com.my.blog.category.repository.CategoryRepository;
+import com.my.blog.global.common.exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,6 @@ public class CategoryService {
     }
 
     public Category findById(Long id){
-        return categoryRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return categoryRepository.findById(id).orElseThrow(()-> new CommonException(CategoryError.NOT_FOUND));
     }
 }

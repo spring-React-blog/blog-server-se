@@ -32,16 +32,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class AuthControllerTest extends RestDocsTestSupport {
-
     @MockBean
     private AuthService authService;
-
     @Autowired
     MemberService memberService;
-
     @Autowired
     ModelMapper mapper;
-
     @Autowired
     private TokenProvider tokenProvider;
 
@@ -49,11 +45,10 @@ class AuthControllerTest extends RestDocsTestSupport {
     private static final String BASE_DOCUMENT = "/public/auth/login";
     private static final String BASE_API = "/" + BASE_DOCUMENT;
 
-
     @BeforeTestClass
     public void init(){
         CreateRequest request = CreateRequest.builder()
-                .email(Email.from("dd@gmail.com"))
+                .email(Email.from("seung90@gmail.com"))
                 .password(Password.from("passwordDecoded"))
                 .name(Name.from("seungeun"))
                 .nickName(NickName.from("dd"))
@@ -65,55 +60,44 @@ class AuthControllerTest extends RestDocsTestSupport {
 
     }
 
-    @Nested
-    class Login{
-        @Test
-        @DisplayName("로그인")
-        public void login() throws Exception {
-            Email email = Email.from("dd@gmail.com");
-            Password password = Password.from("passwordDecoded");
-            LoginRequest loginRequest = LoginRequest.builder()
-                    .email(email)
-                    .password(password)
-                    .build();
-            TokenDTO tokenDTO = tokenProvider.generate(email.getEmail(), List.of(RoleType.USER.name()));
-            given(authService.login(email,password)).willReturn(tokenDTO);
+    @Test
+    @DisplayName("로그인")
+    public void login() throws Exception {
+        Email email = Email.from("seung90@gmail.com");
+        Password password = Password.from("passwordDecoded");
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email(email)
+                .password(password)
+                .build();
+        TokenDTO tokenDTO = tokenProvider.generate(email.getEmail(), List.of(RoleType.USER.name()));
+        given(authService.login(email, password)).willReturn(tokenDTO);
 
-            mockMvc.perform(post("/api/public/auth/login")
-                            .contentType(APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(loginRequest)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.accessToken").value(tokenDTO.getAccessToken().getToken()))
-                    .andExpect(cookie().value("refreshToken",tokenDTO.getRefreshToken().getToken()))
-                    .andDo(restDocs.document(
-                                    requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON)),
-                                    requestFields(
-                                            fieldWithPath("email").description("이메일").type(JsonFieldType.STRING),
-                                            fieldWithPath("password").description("비밀번호").type(JsonFieldType.STRING)
-                                    ),
-                                    responseHeaders(
-                                            headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON),
-                                            headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰")
-                                    ),
-                                    responseFields(
-                                            fieldWithPath("accessToken").description("액세스토큰").type(JsonFieldType.STRING)
-                                    )
-                            )
-                    );
-        }
-
-        @Test
-        @DisplayName("잘못된 로그인 정보")
-        public void noMember(){
-
-        }
-
+        mockMvc.perform(post("/api/public/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessToken").value(tokenDTO.getAccessToken().getToken()))
+                .andExpect(cookie().value("refreshToken", tokenDTO.getRefreshToken().getToken()))
+                .andDo(restDocs.document(
+                                requestHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON)),
+                                requestFields(
+                                        fieldWithPath("email").description("이메일").type(JsonFieldType.STRING),
+                                        fieldWithPath("password").description("비밀번호").type(JsonFieldType.STRING)
+                                ),
+                                responseHeaders(
+                                        headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON),
+                                        headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("accessToken").description("액세스토큰").type(JsonFieldType.STRING)
+                                )
+                        )
+                );
     }
-
     @Test
     @DisplayName("리프레시 토큰 발행 요청")
     public void refresh() throws Exception {
-        Email email = Email.from("dd@gmail.com");
+        Email email = Email.from("seung90@gmail.com");
         Password password = Password.from("passwordDecoded");
 
         TokenDTO tokenDTO = tokenProvider.generate(email.getEmail(), List.of(RoleType.USER.name()));
@@ -122,7 +106,17 @@ class AuthControllerTest extends RestDocsTestSupport {
         mockMvc.perform(post("/api/public/auth/refresh")
                         .cookie(cookie)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").value(tokenDTO.getAccessToken().getToken()));
+                .andExpect(jsonPath("$.accessToken").value(tokenDTO.getAccessToken().getToken()))
+                .andDo(restDocs.document(
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON),
+                                headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("accessToken").description("액세스토큰").type(JsonFieldType.STRING)
+                        )
+                    )
+                );
 
     }
 

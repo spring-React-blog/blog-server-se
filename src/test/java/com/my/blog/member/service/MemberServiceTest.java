@@ -87,7 +87,6 @@ class MemberServiceTest {
         }
 
         Page<MemberResponse> memberResponses = new PageImpl<>(list);
-        System.out.println(memberResponses.getContent().get(0).getEmail().getEmail());
         given(memberRepository.search(condition,pageable)).willReturn(memberResponses);
 
         //when

@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.1'
 	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -51,11 +52,33 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
+	// AWS S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 }
+def profile = project.hasProperty("profile") ? project.getProperty("profile") : "local"
+
+sourceSets {
+	ext.profile = (project.hasProperty('profile') || profile) ? profile : "local"
+
+	main {
+		java {
+			srcDirs = ["src/main/java"]
+		}
+		resources {
+			srcDirs = ["src/main/resources", "src/main/resources-${profile}"]
+		}
+	}
+}
+//도커 이미지 관련 설정
+jar {
+	enabled = false
+}
+//restdocument 설정
 clean {
 	delete documentDir
 }
@@ -63,6 +86,11 @@ clean {
 test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
+
+	//환경 설정
+	doFirst {
+		systemProperty 'spring.profiles.active', 'local'
+	}
 }
 
 asciidoctor {

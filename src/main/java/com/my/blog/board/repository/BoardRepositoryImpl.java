@@ -37,27 +37,6 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
         return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
     }
 
-    /*public List<BoardResponse> getBoard(Long id){
-        return queryFactory
-                .select(Projections.constructor(
-                        BoardResponse.class,
-                        board.id,
-                        board.title,
-                        board.content,
-                        board.category.name,
-                        board.member.email,
-                        board.boardCount.viewCount,
-                        //board.boardImages
-                ))
-                .from(board)
-                .leftJoin(board.category, category)
-                //   .leftJoin(board.boardImages, boardImage)
-                .innerJoin(board.boardCount, boardCount)
-                .innerJoin(board.member, member)
-                .where(boardIdEq(id))
-                .fetch();
-    }*/
-
     public List<BoardResponse> getBoardList(final BoardSchCondition condition,final Pageable pageable){
         return queryFactory
                 .select(Projections.constructor(

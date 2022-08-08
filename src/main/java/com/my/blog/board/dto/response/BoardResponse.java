@@ -6,12 +6,15 @@ import com.my.blog.board.domain.vo.Title;
 import com.my.blog.member.entity.vo.Email;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BoardResponse {
+public class BoardResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private Title title;
     private Content content;

@@ -25,19 +25,18 @@ class BoardRequestTest {
     }
     @Test
     public void isTitleUnderMaxSize(){
-        BoardRequest req = BoardRequest.builder()
+        CreateRequest req = CreateRequest.builder()
                 .title(Title.from("타이틀이 삼십자를 넘으면 에러가 나야한다."))
                 .content(Content.from("content"))
                 .categoryId(1L)
                 .status(Status.TRUE)
-                .memberId(1L)
                 .build();
 
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
 
         // validation 및 출력
-        Set<ConstraintViolation<BoardRequest>> validate = validator.validate(req);
+        Set<ConstraintViolation<CreateRequest>> validate = validator.validate(req);
         List<String> messages = validate.stream().map(m -> m.getMessage()).collect(toList());
 
         assertThat(messages.isEmpty()).isTrue();
@@ -45,25 +44,20 @@ class BoardRequestTest {
 
     @Test
     public void isTitleOverMaxSize(){
-        BoardRequest req = BoardRequest.builder()
+        CreateRequest req = CreateRequest.builder()
                 .title(Title.from("타이틀이 삼십자를 넘으면 메세지가 나온다. gfgfg지금 이 글자는 삼십자 이상이다.."))
                 .content(Content.from("content"))
                 .categoryId(1L)
                 .status(Status.TRUE)
-                .memberId(1L)
                 .build();
 
-        System.out.println("title > "+req.getTitle().getTitle());
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
 
         // validation 및 출력
-        Set<ConstraintViolation<BoardRequest>> validate = validator.validate(req);
+        Set<ConstraintViolation<CreateRequest>> validate = validator.validate(req);
         List<String> messages = validate.stream().map(m -> m.getMessage()).collect(toList());
-        System.out.println("********");
-        for (String  m: messages){
-            System.out.println(m);
-        }
+
         //assertThat(messages.isEmpty()).isFalse();
         //assertThat(messages).contains("30자 이하로 입력해주세요.");
         

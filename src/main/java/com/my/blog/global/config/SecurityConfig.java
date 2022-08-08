@@ -56,10 +56,20 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // restapi 라서 불필요
-                .cors() // 클라이언트와 다른 port 사용 시 모든 출처 허용
-                .and()
+                .csrf().disable();
 
+        http
+                .cors()
+                .configurationSource(corsConfigurationSource())// 클라이언트와 다른 port 사용 시 모든 출처 허용
+                .and()
+                .formLogin().disable() //스프링 기본 login form 미사용
+                .authorizeRequests()
+                .antMatchers(PUBLIC).permitAll()
+                .antMatchers(DB).permitAll()
+                .antMatchers("/js/**", "/favicon.ico/**", "/css/**", "/","/console/","/static").permitAll()
+                .anyRequest().authenticated()
+
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // 인증, 허가 에러 시 공통적으로 처리해주는 부분이다.
                 .accessDeniedHandler(new JwtAccessDeniedHandler())
@@ -70,12 +80,7 @@ public class SecurityConfig  {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //JWT를 쓰려면 Spring Security에서 기본적으로 지원하는 Session 설정을 해제해야 한다.
 
                 .and()
-                .formLogin().disable() //스프링 기본 login form 미사용
-                .authorizeHttpRequests()
-                .antMatchers(PUBLIC).permitAll()
-                .antMatchers(DB).permitAll()
-                .anyRequest().authenticated()
-                .and()
+
                 .headers()
                 .frameOptions().sameOrigin()
                 ;
@@ -96,7 +101,11 @@ public class SecurityConfig  {
     }
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
-        return web -> web.ignoring().antMatchers("/js/**", "/favicon.ico/**", "/css/**", "/","/console/");
+        return web -> web.ignoring().antMatchers("/js/**", "/favicon.ico/**", "/css/**", "/","/console/","/docs/**");
     }
+    /*@Override WebSecurityConfigurerAdapter
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }*/
 
 }

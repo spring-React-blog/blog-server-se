@@ -14,7 +14,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Date;
 
-@Component
+@ConfigurationProperties("jwt")
+@ConstructorBinding
 public class TokenProperties {
 
     private final long accessTokenValidityInSeconds;
@@ -23,12 +24,12 @@ public class TokenProperties {
     private Key key;
 
     public TokenProperties(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.accessToken-validity-in-seconds}") long accessTokenValidityInSeconds,
-            @Value("${jwt.refreshToken-validity-in-seconds}") long refreshTokenValidityInSeconds
+           final String secret,
+           final long accessTokenValidityInSeconds,
+           final long refreshTokenValidityInSeconds
             ) {
-        this.accessTokenValidityInSeconds = accessTokenValidityInSeconds * 1000;
-        this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds * 1000;
+        this.accessTokenValidityInSeconds = accessTokenValidityInSeconds ;
+        this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds ;
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 

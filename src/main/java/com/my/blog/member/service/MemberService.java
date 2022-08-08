@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -21,6 +23,13 @@ public class MemberService {
     private final EntityMapper mapper;
 
     public Long save(final MemberDTO memberDTO){
+
+        boolean present = memberRepository.findByEmail(memberDTO.getEmail()).isPresent();
+
+        if(present){
+            throw new CommonException(MemberErrorCode.DUPLICATED_EMAIL);
+        }
+
         Member member = mapper.toEntity(memberDTO);
         member.encode(member.getPassword(),passwordEncoder);
         Member savedMember = memberRepository.save(member);

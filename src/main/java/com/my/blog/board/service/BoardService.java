@@ -30,9 +30,10 @@ public class BoardService {
         return board;
     }
 
-    public void updateBoard(final Board updateBoard, final Long id, final String memberId){
-        Board board = manipulableBoard(id, memberId);
-        board.update(updateBoard);
+    public Board updateBoard(final Board updateBoard, final String memberEmail){
+        Board board = manipulableBoard(updateBoard.getId(), memberEmail);
+        Board updated = board.update(updateBoard);
+        return updated;
      //   boardCacheService.updateCache(id);
     }
 

@@ -1,9 +1,9 @@
-package com.my.blog.board.dto.request;
+package com.my.blog.file.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageDTO {
     private String originalName;
     private String extension;

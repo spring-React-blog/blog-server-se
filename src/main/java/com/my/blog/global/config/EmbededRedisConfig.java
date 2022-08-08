@@ -1,16 +1,18 @@
 package com.my.blog.global.config;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-@Profile("local")
+@Slf4j
 @Configuration
+@ConditionalOnProperty(prefix = "embedded", name = "redis", havingValue = "true")
 public class EmbededRedisConfig {
 
     private RedisServer redisServer;
@@ -19,9 +21,17 @@ public class EmbededRedisConfig {
     private int port;
 
     @PostConstruct
-    public void redisServer(){
-        redisServer = new RedisServer(port);
-        redisServer.start();
+    public void redisServer()  {
+        redisServer = RedisServer.builder()
+                .port(port)
+                .setting("maxmemory 128M")
+                .build();
+        try {
+            redisServer.start();
+        } catch(Exception ex) {
+            log.info("redis server start error {}" , ex);
+        }
+
     }
 
     @PreDestroy

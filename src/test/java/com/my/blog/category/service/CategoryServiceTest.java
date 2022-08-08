@@ -2,34 +2,28 @@ package com.my.blog.category.service;
 
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.repository.CategoryRepository;
-import com.my.blog.category.vo.CategoryRequest;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.my.blog.category.vo.CreateRequest;
+import com.my.blog.support.service.UnitTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
+import org.mockito.Mock;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
-@SpringBootTest
-@Transactional
+@UnitTest
 class CategoryServiceTest {
 
-    @Autowired
+    @Mock
     CategoryService categoryService;
 
-    @Autowired
-    EntityManager entityManager;
+   /* @Autowired
+    EntityManager entityManager;*/
 
-    @Autowired
+    @Mock
     CategoryRepository categoryRepository;
 
-    @BeforeEach
+   /* @BeforeEach
     public void init() {
         categoryRepository.deleteAll();
         this.entityManager
@@ -44,13 +38,13 @@ class CategoryServiceTest {
                 .createNativeQuery("ALTER TABLE category AUTO_INCREMENT = 1")
                 .executeUpdate();
     }
-
+*/
     @Test
     @DisplayName("카테고리 생성")
     public void create(){
-        CategoryRequest categoryRequest = CategoryRequest.builder().name("스프링").build();
-        Category category = categoryRequest.toEntity();
-
+        CreateRequest createRequest = CreateRequest.builder().name("스프링").build();
+        Category category = createRequest.toEntity();
+        given(categoryService.save(category)).willReturn(1L);
         Long savedId = categoryService.save(category);
         assertThat(savedId).isEqualTo(1L);
 

@@ -21,3 +21,4 @@ endif::[]
 
 == User API
 === link:auth.html[1.Login]
+=== link:board.html[2.Board]

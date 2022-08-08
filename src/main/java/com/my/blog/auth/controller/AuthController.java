@@ -43,11 +43,16 @@ public class AuthController {
      * @output AccessToken
      * */
     @PostMapping("/public/auth/refresh")
-    public ResponseEntity<AuthTokenResponse> issueAccessToken(@CookieValue(name = "refreshToken")  String refreshToken){
+    public ResponseEntity<AuthTokenResponse> issueAccessToken(@CookieValue(name = "refreshToken")  String refreshToken
+            , HttpServletResponse response){
         //refresh token 도 만료되었을 경우 로그아웃
         AccessToken token = authService.issueAccessToken(refreshToken);
-        AuthTokenResponse response = AuthTokenResponse.builder().accessToken(token).build();
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        AuthTokenResponse tokenResponse = AuthTokenResponse.builder().accessToken(token).build();
+
+        Cookie cookie = getRefreshTokenCookie( refreshToken);
+        response.addCookie(cookie);
+
+        return new ResponseEntity<>(tokenResponse,HttpStatus.OK);
 
     }
 

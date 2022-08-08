@@ -103,7 +103,7 @@ public class Member extends BaseTimeEntity {
        return Objects.nonNull(password) ? encode(password,passwordEncoder)  : this.password;
     }
 
-    public boolean emailEquals(final String email){
+    public boolean emailEquals(final Email email){
         return this.email.equals(email);
     }
 
