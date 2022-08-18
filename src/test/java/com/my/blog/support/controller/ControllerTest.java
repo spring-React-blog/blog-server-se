@@ -36,6 +36,7 @@ public class ControllerTest {
         registry.add("jwt.secret", () -> "seungeung112220202094885213nfnfkdfm23023jdflsfseungeung112220202094885213nfnfkdfm23023jdflsf");
         registry.add("jwt.accessTokenValidityInSeconds", () -> Long.valueOf(3000));
         registry.add("jwt.refreshTokenValidityInSeconds", () -> Long.valueOf(3000));
+        registry.add("aws.client", () -> "false");
         registry.add("cloud.aws.region.static", () -> "ap-northeast-2");
         registry.add("upload.service", () -> "local");
         registry.add("file.upload.path", () -> "/images");
