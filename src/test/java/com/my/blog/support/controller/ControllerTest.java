@@ -38,6 +38,7 @@ public class ControllerTest {
         registry.add("jwt.refreshTokenValidityInSeconds", () -> Long.valueOf(3000));
 
         registry.add("upload.service", () -> "local");
+        registry.add("file.upload.path", () -> "/images");
     }
 
 
