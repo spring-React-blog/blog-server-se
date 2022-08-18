@@ -12,20 +12,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 @Disabled
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@SpringBootTest
 public class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
 
     @Autowired
     protected ObjectMapper objectMapper;
-
     @TestConfiguration
     public class MockBeanTest {
         FileUtil fileUtil= new FileUtil();
@@ -42,4 +44,5 @@ public class ControllerTest {
             return new TokenProperties(secret,accessTokenValidityInSeconds,refreshTokenValidityInSeconds);
         }
     }
+
 }
