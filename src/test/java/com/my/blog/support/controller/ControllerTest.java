@@ -16,6 +16,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 @Disabled
@@ -28,21 +31,14 @@ public class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
-    @TestConfiguration
-    public class MockBeanTest {
-        FileUtil fileUtil= new FileUtil();
-        private final String secret = "test123test123test123test123test123test123test123test123test123";
-        private final long accessTokenValidityInSeconds = 3000;
-        private final long refreshTokenValidityInSeconds = 3000;
-        @Bean
-        public UploadService uploadService(){
-            return new DiskUploadServiceImpl(fileUtil);
-        }
+    @DynamicPropertySource
+    static void registerPgProperties(DynamicPropertyRegistry registry) {
+        registry.add("jwt.secret", () -> "seungeung112220202094885213nfnfkdfm23023jdflsfseungeung112220202094885213nfnfkdfm23023jdflsf");
+        registry.add("jwt.accessTokenValidityInSeconds", () -> 3000);
+        registry.add("jwt.refreshTokenValidityInSeconds", () -> 3000);
 
-        @Bean
-        public TokenProperties tokenProperties(){
-            return new TokenProperties(secret,accessTokenValidityInSeconds,refreshTokenValidityInSeconds);
-        }
+        registry.add("upload.service", () -> "local");
     }
+
 
 }
