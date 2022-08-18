@@ -5,6 +5,7 @@ import com.my.blog.file.service.DiskUploadServiceImpl;
 import com.my.blog.file.service.UploadService;
 import com.my.blog.global.common.utils.FileUtil;
 import com.my.blog.global.jwt.TokenProperties;
+import com.my.blog.global.jwt.TokenProvider;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -31,11 +33,27 @@ public class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @TestConfiguration
+    public static class TestConfig {
+
+        @Bean
+        @Primary
+        public TokenProvider tokenProvider(){
+            return new TokenProvider(tokenProperties());
+        }
+        public TokenProperties tokenProperties() {
+           return new TokenProperties(
+                   "qwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvbqwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvb",
+                   Long.valueOf(3000),
+                   Long.valueOf(3000)
+           );
+        }
+
+    }
+
     @DynamicPropertySource
     static void registerPgProperties(DynamicPropertyRegistry registry) {
-        registry.add("jwt.secret", () -> "seungeung112220202094885213nfnfkdfm23023jdflsfseungeung112220202094885213nfnfkdfm23023jdflsf");
-        registry.add("jwt.access-token-validity-in-seconds", () -> Long.valueOf(3000));
-        registry.add("jwt.refresh-token-validity-in-seconds", () -> Long.valueOf(3000));
         registry.add("aws.client", () -> "false");
         registry.add("cloud.aws.region.static", () -> "ap-northeast-2");
         registry.add("upload.service", () -> "local");
