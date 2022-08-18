@@ -39,6 +39,7 @@ public class ControllerTest {
         registry.add("aws.client", () -> "false");
         registry.add("cloud.aws.region.static", () -> "ap-northeast-2");
         registry.add("upload.service", () -> "local");
+        registry.add("cloud.aws.stack.auto",() -> "false");
         registry.add("file.upload.path", () -> "/images");
     }
 
