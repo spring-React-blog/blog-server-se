@@ -6,7 +6,12 @@ import com.my.blog.file.service.UploadService;
 import com.my.blog.global.common.utils.FileUtil;
 import com.my.blog.global.jwt.TokenProperties;
 import com.my.blog.global.jwt.TokenProvider;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,29 +32,24 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-public class ControllerTest {
+public class ControllerTest implements BeforeEachCallback {
     @Autowired
     protected MockMvc mockMvc;
 
     @Autowired
     protected ObjectMapper objectMapper;
 
-    @TestConfiguration
-    public static class TestConfig {
-
-        @Bean
-        @Primary
-        public TokenProvider tokenProvider(){
-            return new TokenProvider(tokenProperties());
-        }
-        public TokenProperties tokenProperties() {
-           return new TokenProperties(
-                   "qwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvbqwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvb",
-                   Long.valueOf(3000),
-                   Long.valueOf(3000)
-           );
-        }
-
+    TokenProvider tokenProvider;
+    TokenProperties tokenProperties;
+    //requires a fresh instance for each @Test method
+    @Override
+    public void beforeEach(ExtensionContext extensionContext) {
+        tokenProperties = new TokenProperties(
+                "qwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvbqwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvb",
+                Long.valueOf(3000),
+                Long.valueOf(3000)
+        );
+        tokenProvider = new TokenProvider(tokenProperties);
     }
 
     @DynamicPropertySource
