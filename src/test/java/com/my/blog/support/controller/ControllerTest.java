@@ -32,34 +32,12 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-public class ControllerTest implements BeforeEachCallback {
+public class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
 
     @Autowired
     protected ObjectMapper objectMapper;
-
-    TokenProvider tokenProvider;
-    TokenProperties tokenProperties;
-    //requires a fresh instance for each @Test method
-    @Override
-    public void beforeEach(ExtensionContext extensionContext) {
-        tokenProperties = new TokenProperties(
-                "qwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvbqwertyasdfghzxcvb234567qwertsdfghxcvb3456sdfghxcvb",
-                Long.valueOf(3000),
-                Long.valueOf(3000)
-        );
-        tokenProvider = new TokenProvider(tokenProperties);
-    }
-
-    @DynamicPropertySource
-    static void registerPgProperties(DynamicPropertyRegistry registry) {
-        registry.add("aws.client", () -> "false");
-        registry.add("cloud.aws.region.static", () -> "ap-northeast-2");
-        registry.add("upload.service", () -> "local");
-        registry.add("cloud.aws.stack.auto",() -> "false");
-        registry.add("file.upload.path", () -> "/images");
-    }
 
 
 }
