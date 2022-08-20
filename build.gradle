@@ -88,9 +88,9 @@ test {
 	useJUnitPlatform()
 
 	//환경 설정
-	doFirst {
+	/*doFirst {
 		systemProperty 'spring.profiles.active', 'local'
-	}
+	}*/
 }
 
 asciidoctor {
