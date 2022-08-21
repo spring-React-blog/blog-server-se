@@ -24,13 +24,13 @@ public class TokenProperties {
     private final Key key;
 
     public TokenProperties(
-           final String secret,
+           final String secretKey,
            final long accessTokenValidityInSeconds,
            final long refreshTokenValidityInSeconds
             ) {
         this.accessTokenValidityInSeconds = accessTokenValidityInSeconds ;
         this.refreshTokenValidityInSeconds = refreshTokenValidityInSeconds ;
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public Key getKey(){
