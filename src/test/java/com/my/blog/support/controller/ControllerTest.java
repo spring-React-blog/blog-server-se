@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-@ConfigurationPropertiesScan("com.my.blog.global.jwt")
+@TestPropertySource(properties = {"spring.config.location = src/test/resources/application.properties"})
 public class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
