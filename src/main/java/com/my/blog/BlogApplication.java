@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
-@ConfigurationPropertiesScan(basePackages = {"com.my.blog.global.*"})
+@ConfigurationPropertiesScan("com.my.blog.global.jwt")
 @SpringBootApplication
 public class BlogApplication {
 
