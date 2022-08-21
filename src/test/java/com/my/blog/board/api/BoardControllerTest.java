@@ -1,5 +1,6 @@
 package com.my.blog.board.api;
 
+import com.my.blog.board.controller.BoardController;
 import com.my.blog.board.domain.vo.Content;
 import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.domain.vo.Title;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -51,20 +53,26 @@ class BoardControllerTest extends RestDocsTestSupport {
     @BeforeEach
     public void initUploadFile() throws IOException {
         //Given
-        final String fileName = "media_17e9d2503c0ecdea37e6d9bc6e2beb26adb470617"; //파일명
+  /*      final String fileName = "media_17e9d2503c0ecdea37e6d9bc6e2beb26adb470617"; //파일명
         final String contentType = "png"; //파일타입
 
-        final String path = "/Users/iseung-eun/Documents/";
+        final String path = "/";
         final String filePath = path + fileName+"."+contentType; //파일경로
         FileInputStream fileInputStream = new FileInputStream(filePath);
         String originalName = fileName + "." + contentType;
-        //Mock파일생성
         image1 = new MockMultipartFile(
                 "files", //name
                 originalName, //originalFilename
                 "image/png",
                 fileInputStream
         );
+*/
+        //Mock파일생성
+        image1 = new MockMultipartFile("data"
+                , "filename.txt"
+                , "text/plain"
+                , "some xml".getBytes());
+
     }
 
     @Test
