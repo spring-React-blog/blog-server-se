@@ -21,7 +21,7 @@ public class TokenProperties {
     private final long accessTokenValidityInSeconds;
     private final long refreshTokenValidityInSeconds;
 
-    private Key key;
+    private final Key key;
 
     public TokenProperties(
            final String secret,
