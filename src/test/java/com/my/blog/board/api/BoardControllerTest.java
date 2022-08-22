@@ -54,21 +54,6 @@ class BoardControllerTest extends RestDocsTestSupport {
 
     @BeforeEach
     public void initUploadFile() throws IOException {
-        CreateRequest request  = CreateRequest.builder()
-                .title(Title.from("welcome"))
-                .content(Content.from("hello world"))
-                .status(Status.TRUE)
-                .categoryId(1L)
-                .build()
-                ;
-        Member member = MemberGiven.getMemberEntity();
-        Category category = CategoryGiven.getCategoryEntity();
-
-        categoryService.save(CategoryGiven.getCategoryEntity());
-        memberService.save(MemberGiven.getMemberDTO());
-        Board board = request.toBoardEntity(List.of(),member,category);
-        boardService.save(board);
-
         //Mock파일생성
         image1 = new MockMultipartFile("data"
                 , "filename.txt"
