@@ -86,7 +86,10 @@ clean {
 test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
-
+	testLogging {
+		events "failed"
+		exceptionFormat "full"
+	}
 	//환경 설정
 	/*doFirst {
 		systemProperty 'spring.profiles.active', 'local'
