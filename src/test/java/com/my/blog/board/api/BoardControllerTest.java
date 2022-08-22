@@ -1,6 +1,6 @@
 package com.my.blog.board.api;
 
-import com.my.blog.board.controller.BoardController;
+import com.my.blog.board.domain.Board;
 import com.my.blog.board.domain.vo.Content;
 import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.domain.vo.Title;
@@ -8,9 +8,13 @@ import com.my.blog.board.dto.request.CreateRequest;
 import com.my.blog.board.dto.request.UpdateRequest;
 import com.my.blog.board.service.BoardSearchService;
 import com.my.blog.board.service.BoardService;
+import com.my.blog.category.entity.Category;
+import com.my.blog.category.given.CategoryGiven;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.file.dto.ImageDTO;
+import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.RoleType;
+import com.my.blog.member.given.MemberGiven;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.support.config.AuthUser;
 import com.my.blog.support.controller.RestDocsTestSupport;
@@ -18,14 +22,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,21 +54,19 @@ class BoardControllerTest extends RestDocsTestSupport {
 
     @BeforeEach
     public void initUploadFile() throws IOException {
-        //Given
-  /*      final String fileName = "media_17e9d2503c0ecdea37e6d9bc6e2beb26adb470617"; //파일명
-        final String contentType = "png"; //파일타입
+        CreateRequest request  = CreateRequest.builder()
+                .title(Title.from("welcome"))
+                .content(Content.from("hello world"))
+                .status(Status.TRUE)
+                .categoryId(1L)
+                .build()
+                ;
+        Member member = MemberGiven.getMemberEntity();
+        Category category = CategoryGiven.getCategoryEntity();
+        Board board = request.toBoardEntity(List.of(),member,category);
 
-        final String path = "/";
-        final String filePath = path + fileName+"."+contentType; //파일경로
-        FileInputStream fileInputStream = new FileInputStream(filePath);
-        String originalName = fileName + "." + contentType;
-        image1 = new MockMultipartFile(
-                "files", //name
-                originalName, //originalFilename
-                "image/png",
-                fileInputStream
-        );
-*/
+        boardService.save(board);
+
         //Mock파일생성
         image1 = new MockMultipartFile("data"
                 , "filename.txt"
