@@ -89,7 +89,12 @@ test {
 	testLogging {
 		events "failed"
 		exceptionFormat "full"
+		showExceptions true
+		showCauses true
+		showStackTraces true
+		showStandardStreams = false
 	}
+
 	//환경 설정
 	/*doFirst {
 		systemProperty 'spring.profiles.active', 'local'
