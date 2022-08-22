@@ -63,8 +63,10 @@ class BoardControllerTest extends RestDocsTestSupport {
                 ;
         Member member = MemberGiven.getMemberEntity();
         Category category = CategoryGiven.getCategoryEntity();
-        Board board = request.toBoardEntity(List.of(),member,category);
 
+        categoryService.save(CategoryGiven.getCategoryEntity());
+        memberService.save(MemberGiven.getMemberDTO());
+        Board board = request.toBoardEntity(List.of(),member,category);
         boardService.save(board);
 
         //Mock파일생성
