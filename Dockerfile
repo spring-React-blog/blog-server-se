@@ -1,5 +1,4 @@
 FROM openjdk:11
-RUN ./gradlew clean --debug build -Pprofile=prod
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 EXPOSE 7777/tcp
