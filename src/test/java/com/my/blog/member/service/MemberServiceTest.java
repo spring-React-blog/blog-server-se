@@ -1,12 +1,12 @@
 package com.my.blog.member.service;
 
-import com.my.blog.member.controller.ModelMapper;
 import com.my.blog.member.dto.MemberResponse;
 import com.my.blog.member.dto.MemberSchCondition;
 import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.Email;
 import com.my.blog.member.entity.vo.Name;
 import com.my.blog.member.entity.vo.NickName;
+import com.my.blog.member.entity.vo.Password;
 import com.my.blog.member.repository.MemberRepository;
 import com.my.blog.member.service.dto.EntityMapper;
 import com.my.blog.member.service.dto.MemberDTO;
@@ -98,5 +98,20 @@ class MemberServiceTest {
         assertThat(content.size()).isEqualTo(5);
         assertThat( members.getTotalPages()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("회원 생성")
+    public void create(){
+        MemberDTO dto = MemberDTO.builder()
+                .email(Email.from("seung90@gmail.com"))
+                .password(Password.from("q1w2e3r4"))
+                .name(Name.from("seung"))
+                .build();
+        Long savedId = memberService.save(dto);
+        assertThat(savedId).isEqualTo(1L);
+
+
+    }
+
 
 }
