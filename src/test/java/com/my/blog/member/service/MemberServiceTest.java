@@ -99,19 +99,4 @@ class MemberServiceTest {
         assertThat( members.getTotalPages()).isEqualTo(1);
     }
 
-    @Test
-    @DisplayName("회원 생성")
-    public void create(){
-        MemberDTO dto = MemberDTO.builder()
-                .email(Email.from("seung90@gmail.com"))
-                .password(Password.from("q1w2e3r4"))
-                .name(Name.from("seung"))
-                .build();
-        Long savedId = memberService.save(dto);
-        assertThat(savedId).isEqualTo(1L);
-
-
-    }
-
-
 }
