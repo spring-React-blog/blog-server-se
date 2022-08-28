@@ -2,7 +2,6 @@ package com.my.blog.auth.controller;
 
 import com.my.blog.auth.service.AuthService;
 import com.my.blog.auth.vo.LoginRequest;
-import com.my.blog.support.controller.RestDocsTestSupport;
 import com.my.blog.global.common.exception.CommonException;
 import com.my.blog.global.jwt.TokenProvider;
 import com.my.blog.global.jwt.dto.TokenDTO;
@@ -12,8 +11,8 @@ import com.my.blog.member.dto.request.CreateRequest;
 import com.my.blog.member.entity.vo.*;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.member.service.dto.MemberDTO;
+import com.my.blog.support.controller.RestDocsTestSupport;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
