@@ -1,6 +1,5 @@
 package com.my.blog.board.api;
 
-import com.my.blog.board.domain.Board;
 import com.my.blog.board.domain.vo.Content;
 import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.domain.vo.Title;
@@ -8,13 +7,9 @@ import com.my.blog.board.dto.request.CreateRequest;
 import com.my.blog.board.dto.request.UpdateRequest;
 import com.my.blog.board.service.BoardSearchService;
 import com.my.blog.board.service.BoardService;
-import com.my.blog.category.entity.Category;
-import com.my.blog.category.given.CategoryGiven;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.file.dto.ImageDTO;
-import com.my.blog.member.entity.Member;
 import com.my.blog.member.entity.vo.RoleType;
-import com.my.blog.member.given.MemberGiven;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.support.config.AuthUser;
 import com.my.blog.support.controller.RestDocsTestSupport;
