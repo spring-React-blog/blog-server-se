@@ -1,0 +1,119 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+
+= RESTful Notes API Guide
+Baeldung;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[Board]]
+
+== 저장
+==== request-header
+include::{snippets}/board-controller-test/save/request-headers.adoc[]
+
+==== request-fields
+include::{snippets}/board-controller-test/save/request-fields.adoc[]
+
+=== response
+include::{snippets}/board-controller-test/save/http-response.adoc[]
+
+==== response-fields
+include::{snippets}/board-controller-test/save/response-fields.adoc[]
+
+== 게시물 파일 첨부
+==== request-header
+include::{snippets}/board-controller-test/upload/request-headers.adoc[]
+
+==== request-parts
+include::{snippets}/board-controller-test/upload/request-parts.adoc[]
+
+=== response
+include::{snippets}/board-controller-test/upload/http-response.adoc[]
+
+==== response-fields
+include::{snippets}/board-controller-test/upload/response-fields.adoc[]
+
+
+== 단 건 조회
+=== request
+include::{snippets}/board-controller-test/get-one/http-request.adoc[]
+
+=== request
+include::{snippets}/board-controller-test/get-one/httpie-request.adoc[]
+
+=== path-parameter
+include::{snippets}/board-controller-test/get-one/path-parameters.adoc[]
+
+=== response-fields
+include::{snippets}/board-controller-test/get-one/response-fields.adoc[]
+
+=== response-body
+include::{snippets}/board-controller-test/get-list/response-body.adoc[]
+
+== 리스트 조회
+=== request
+include::{snippets}/board-controller-test/get-list/http-request.adoc[]
+
+=== request
+include::{snippets}/board-controller-test/get-list/httpie-request.adoc[]
+
+=== path-parameter
+include::{snippets}/board-controller-test/get-list/path-parameters.adoc[]
+
+=== response-fields
+include::{snippets}/board-controller-test/get-list/response-fields.adoc[]
+
+=== response-body
+include::{snippets}/board-controller-test/get-list/response-body.adoc[]
+
+== 삭제
+=== request
+include::{snippets}/board-controller-test/delete-board/http-request.adoc[]
+
+=== request
+include::{snippets}/board-controller-test/delete-board/httpie-request.adoc[]
+
+=== path-parameter
+include::{snippets}/board-controller-test/delete-board/path-parameters.adoc[]
+
+
+== 수정
+==== request-header
+include::{snippets}/board-controller-test/update-board/request-headers.adoc[]
+
+==== request-fields
+include::{snippets}/board-controller-test/update-board/request-fields.adoc[]
+
+=== response
+include::{snippets}/board-controller-test/update-board/http-response.adoc[]
+
+==== response-fields
+include::{snippets}/board-controller-test/update-board/response-fields.adoc[]
+
+==== response-headers
+include::{snippets}/board-controller-test/update-board/response-headers.adoc[]
+
+==== response-body
+include::{snippets}/board-controller-test/update-board/response-body.adoc[]
+
+== 저장 에러
+==== request-header
+include::{snippets}/board-controller-test/valid-test-with-exception/request-headers.adoc[]
+
+==== request-fields
+include::{snippets}/board-controller-test/valid-test-with-exception/request-parameters.adoc[]
+
+=== response
+include::{snippets}/board-controller-test/valid-test-with-exception/http-response.adoc[]
+
+==== response-fields
+include::{snippets}/board-controller-test/valid-test-with-exception/response-fields.adoc[]
+
+==== response-body
+include::{snippets}/board-controller-test/valid-test-with-exception/response-body.adoc[]
