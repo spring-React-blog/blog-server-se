@@ -9,6 +9,7 @@ import com.my.blog.board.service.BoardSearchService;
 import com.my.blog.board.service.BoardService;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.file.dto.ImageDTO;
+import com.my.blog.global.common.mapper.EnumValueDTO;
 import com.my.blog.member.entity.vo.RoleType;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.support.config.AuthUser;

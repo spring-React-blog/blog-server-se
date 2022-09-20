@@ -11,6 +11,8 @@ import com.my.blog.board.service.BoardService;
 import com.my.blog.category.entity.Category;
 import com.my.blog.category.service.CategoryService;
 import com.my.blog.file.service.UploadService;
+import com.my.blog.global.common.mapper.EnumMapper;
+import com.my.blog.global.common.mapper.EnumValueDTO;
 import com.my.blog.member.service.MemberService;
 import com.my.blog.member.service.dto.EntityMapper;
 import com.my.blog.member.service.dto.MemberDTO;
@@ -36,7 +38,13 @@ public class BoardController {
     private final BoardSearchService boardSearchService;
     private final UploadService uploadService;
     private final EntityMapper entityMapper;
+    private final EnumMapper enumMapper;
 
+    @GetMapping("/public/board/status")
+    public ResponseEntity<List<EnumValueDTO> > getStatusList(){
+        List<EnumValueDTO> boardStatus = enumMapper.getOne("BoardStatus");
+        return new ResponseEntity<>(boardStatus,HttpStatus.OK);
+    }
     @GetMapping("/boards")
     public ResponseEntity<BoardResponse> getList(BoardSchCondition condition, Pageable pageable){
         Page<BoardResponse> boards = boardSearchService.getBoards(condition, pageable);

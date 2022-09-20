@@ -1,7 +1,6 @@
 package com.my.blog.board.dto.request;
 
 import com.my.blog.board.domain.vo.Content;
-import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.domain.vo.Title;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ class BoardRequestTest {
                 .title(Title.from("타이틀이 삼십자를 넘으면 에러가 나야한다."))
                 .content(Content.from("content"))
                 .categoryId(1L)
-                .status(Status.TRUE)
+                //.status(new EnumValueDTO(Status.TRUE))
                 .build();
 
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
@@ -48,7 +47,7 @@ class BoardRequestTest {
                 .title(Title.from("타이틀이 삼십자를 넘으면 메세지가 나온다. gfgfg지금 이 글자는 삼십자 이상이다.."))
                 .content(Content.from("content"))
                 .categoryId(1L)
-                .status(Status.TRUE)
+               // .status(new EnumValueDTO(Status.TRUE))
                 .build();
 
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();

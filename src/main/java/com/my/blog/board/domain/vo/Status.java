@@ -1,11 +1,22 @@
 package com.my.blog.board.domain.vo;
 
-public enum Status {
+import com.my.blog.global.common.mapper.EnumModel;
+public enum Status implements EnumModel {
     TRUE("공개"),FALSE("비공개"), DELETED("삭제");
 
-    private String status_desc;
+    private String statusDesc;
 
     Status(String desc){
-        this.status_desc = desc;
+        this.statusDesc = desc;
+    }
+
+    @Override
+    public String getKey() {
+        return name();
+    }
+
+    @Override
+    public String getValue() {
+        return statusDesc;
     }
 }

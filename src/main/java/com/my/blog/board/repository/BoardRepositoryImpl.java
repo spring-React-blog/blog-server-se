@@ -76,9 +76,11 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
                         titleContains(condition.title()),
                         contentContains(condition.content()),
                         emailContains(condition.memberEmail()),
-                        notDeleted()
+                        notDeleted(),
+                        notOpened()
                 );
     }
+
 
     private OrderSpecifier orderCondition( final Pageable pageable ){
         for (Sort.Order o : pageable.getSort()) {
@@ -89,6 +91,9 @@ public class BoardRepositoryImpl implements BoardSearchRepository{
         return new OrderSpecifier(Order.DESC, board.createdDate);
     }
 
+    private BooleanExpression notOpened() {
+        return board.status.ne(Status.FALSE) ;
+    }
 
     private BooleanExpression notDeleted(){
         return board.status.ne(Status.DELETED) ;

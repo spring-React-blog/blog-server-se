@@ -24,6 +24,7 @@ public class CreateRequest implements Serializable {
     private Title title;
     @Valid
     private Content content;
+
     private Status status;
     private List<ImageDTO> files;
     private Long categoryId;
@@ -31,19 +32,21 @@ public class CreateRequest implements Serializable {
     @Builder
     public CreateRequest(Title title,
                          Content content,
-                         Status status,
                          Long categoryId,
+                         Status status,
                          List<ImageDTO> files) {
         this.title = title;
         this.content = content;
-        this.status = status ;
+        this.status = status;
         this.categoryId = categoryId;
         this.files = files;
 
     }
 
     public List<BoardImage> toBoardImageEntityList()  {
-       List<BoardImage> boardImages = new ArrayList();
+        List<BoardImage> boardImages = new ArrayList();
+        if(files==null) return boardImages;
+
         for(ImageDTO image : files) {
             BoardImage boardImage = BoardImage.builder()
                     .originalName(image.getOriginalName())
@@ -58,7 +61,9 @@ public class CreateRequest implements Serializable {
     }
 
     public Board toBoardEntity(List<BoardImage> boardImages, Member member, Category category)  {
-        if(this.status == null) this.status = Status.TRUE;
+        //상태가 없다면 기본은 공개
+        if(this.status == null) this.status =  Status.TRUE;//new EnumValueDTO(Status.TRUE);
+
         Board board = Board.builder()
                 .title(this.title)
                 .content(this.content)

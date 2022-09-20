@@ -1,19 +1,14 @@
 package com.my.blog.board.dto.request;
 
 import com.my.blog.board.domain.Board;
-import com.my.blog.board.domain.BoardImage;
 import com.my.blog.board.domain.vo.Content;
 import com.my.blog.board.domain.vo.Status;
 import com.my.blog.board.domain.vo.Title;
 import com.my.blog.category.entity.Category;
-import com.my.blog.member.entity.Member;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -46,7 +41,7 @@ public class UpdateRequest implements Serializable {
     }
 
     public Board toBoardEntity(Category category)  {
-        if(this.status == null) this.status = Status.TRUE;
+        if(this.status == null) this.status= Status.TRUE;// = new EnumValueDTO(Status.TRUE);
         Board board = Board.builder()
                 .id(this.boardId)
                 .title(this.title)

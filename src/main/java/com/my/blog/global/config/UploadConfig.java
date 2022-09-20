@@ -1,7 +1,5 @@
 package com.my.blog.global.config;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.my.blog.file.service.AWSUploadServiceImpl;
 import com.my.blog.file.service.DiskUploadServiceImpl;
 import com.my.blog.file.service.UploadService;
 import com.my.blog.global.common.utils.FileUtil;

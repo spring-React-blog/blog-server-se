@@ -4,6 +4,7 @@ import com.my.blog.board.domain.Board;
 import com.my.blog.board.error.BoardErrorCode;
 import com.my.blog.board.repository.BoardRepository;
 import com.my.blog.count.service.BoardCountService;
+import com.my.blog.global.common.aspect.Trace;
 import com.my.blog.global.common.exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class BoardService {
     private final BoardCountService boardCountService;
    // private final BoardCacheService boardCacheService; 추후 redis 적용
 
+    @Trace
     public Board save(final Board board){
         Board savedBoard = boardRepository.save(board);
         //    boardCacheService.resetListCache(savedBoard );

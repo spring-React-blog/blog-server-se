@@ -36,6 +36,7 @@ dependencies {
 	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.1'
 	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
+	implementation group: 'org.apache.commons', name:'commons-text', version: '1.8'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	implementation 'mysql:mysql-connector-java'
